@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${user.id == club.creator.id ? 'Edit Club - Kids Portal' : 'View Club - Kids Portal'}">Club Details</title>
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/css/global-styles.css">
+    <link rel="stylesheet" href="/css/create-club-styles.css">
+    <link rel="stylesheet" href="/css/club-details.css">
+
+    <!-- Page-specific Styles -->
+    <link rel="stylesheet" href="/css/club-details.css">
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Open+Sans:wght@400;600;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+<header class="portal-header">
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-star"></i>
+            <h1>Kids Portal</h1>
+        </div>
+        <nav class="top-nav">
+            <a th:href="@{/home}" class="nav-btn">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+            <a th:href="@{/logout}" class="nav-btn">
+                <i class="fas fa-right-from-bracket"></i>
+                Logout
+            </a>
+        </nav>
+    </div>
+</header>
+
+<main class="portal-main">
+    <div class="container">
+        <section class="page-header">
+            <h2>
+                <i class="fas fa-users"></i>
+                <span th:text="${user.id == club.creator.id ? 'Edit Club' : 'View Club'}"></span>
+                <span th:classappend="${user.id == club.creator.id} ? 'edit-mode-tag' : 'view-mode-tag'"
+                      th:text="${user.id == club.creator.id} ? 'Editing' : 'View Only'"></span>
+            </h2>
+            <p>See club details or update information if you are the creator.</p>
+        </section>
+
+        <section class="create-club-section">
+            <div class="form-container">
+                <form class="club-form"
+                      th:action="@{'/clubs/' + ${club.id} + '/details'}"
+                      th:method="put"
+                      th:object="${clubRequest}">
+
+                    <div class="form-section visible">
+                        <h3><i class="fas fa-info-circle"></i> Club Information</h3>
+
+                        <div class="form-group">
+                            <label for="clubName">Club Name *</label>
+                            <input id="clubName"
+                                   th:field="*{name}"
+                                   type="text"
+                                   th:disabled="${user.id != club.creator.id}"
+                                   placeholder="Enter club name"
+                                   required>
+                            <p class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="clubDescription">Description *</label>
+                            <textarea id="clubDescription"
+                                      th:field="*{description}"
+                                      th:disabled="${user.id != club.creator.id}"
+                                      placeholder="Describe the club, its purpose, and activities."
+                                      rows="4"
+                                      required></textarea>
+                            <p class="error-message" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="clubLocation">Location *</label>
+                            <select id="clubLocation"
+                                    th:field="*{location}"
+                                    th:disabled="${user.id != club.creator.id}"
+                                    required>
+                                <option th:each="location : ${T(com.portal.kids.common.Location).values()}"
+                                        th:value="${location}"
+                                        th:text="${location}"></option>
+                            </select>
+                            <p class="error-message" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="clubType">Activity Type *</label>
+                            <select id="clubType"
+                                    th:field="*{type}"
+                                    th:disabled="${user.id != club.creator.id}"
+                                    required>
+                                <option th:each="type : ${T(com.portal.kids.common.ActivityType).values()}"
+                                        th:value="${type}"
+                                        th:text="${type}"></option>
+                            </select>
+                            <p class="error-message" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="clubPicture">Picture</label>
+                            <img th:src="${#strings.isEmpty(club.picture) ?
+                                    'https://tse2.mm.bing.net/th/id/OIP.1WxXX9a1BHpvMvZ8P1R0AAAAAA?pid=ImgDetMain' :
+                                    club.picture}"
+                                 alt="Club picture"
+                                 style="max-width: 200px;">
+
+                            <input id="clubPicture"
+                                   type="text"
+                                   th:field="*{picture}"
+                                   placeholder="Paste image URL here"
+                                   th:disabled="${user.id != club.creator.id}">
+                            <small>Paste a direct image URL (e.g., https://example.com/image.png)</small>
+                            <p class="error-message" th:if="${#fields.hasErrors('picture')}" th:errors="*{picture}"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button th:if="${user.id == club.creator.id}"
+                                type="submit"
+                                class="btn btn-success">
+                            <i class="fas fa-check"></i>
+                            Save Changes
+                        </button>
+
+                        <a th:href="@{/home}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Home
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</main>
+
+<th:block th:insert="fragments/footer :: footer"></th:block>
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Schedule - Kids Portal</title>
+    <link rel="stylesheet" href="/css/club-schedule-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="portal-header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-star"></i>
+                <h1>Kids Portal</h1>
+            </div>
+            <nav class="top-nav">
+                <a th:href="@{/home}" class="nav-btn">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <a th:href="@{/logout}" class="nav-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="portal-main">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2><i class="fas fa-calendar-week"></i> Weekly Training Schedule</h2>
+                <p>View all available trainings for this week</p>
+            </div>
+
+            <!-- Club Info Card -->
+            <section class="card club-info-card">
+                <div class="club-header">
+                    <div class="club-icon-large" style="--color:#ff6b6b">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="club-details" >
+                        <h3 th:text="${club.name}">Science Explorers Club</h3>
+                        <p th:text="${club.location}" class="club-location"><i class="fas fa-map-marker-alt"></i> Main Building, Room 201</p>
+                        <p th:text="${club.description}"class="club-description">Explore the wonders of science through fun experiments and hands-on activities!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Weekly Schedule -->
+            <section class="schedule-section" th:each="event : ${clubEvents}">
+                <!-- Monday -->
+                <div class="day-card">
+                    <div class="day-header">
+                        <h3 th:text="${event.startDate.dayOfWeek + ' ' + #temporals.format(event.startDate, 'dd/MM/yyyy')}"><i class="fas fa-calendar-day"></i> Monday</h3>
+                    </div>
+                    <div class="trainings-list">
+                        <div class="training-item">
+                            <div class="training-time">
+                                <i class="fas fa-clock"></i>
+                                <span th:text="${event.startTime}">9:00 AM - 10:30 AM</span>
+                            </div>
+                            <div class="training-details">
+                                <h4>Chemistry Lab</h4>
+                                <p th:text="${event.description}" class="training-description">Learn about chemical reactions through safe experiments</p>
+<!--                                <p th:text="${event.startTime}" class="training-instructor"><i class="fas fa-user"></i> Instructor: Dr. Sarah Johnson</p>-->
+                                <p th:text="${event.maxParticipants}" class="training-capacity"><i class="fas fa-users"></i> Capacity: 15 students</p>
+                            </div>
+<!--                            <button class="subscribe-btn" onclick="toggleSubscribe(this)">-->
+<!--                                <i class="fas fa-plus-circle"></i>-->
+<!--                                Subscribe-->
+<!--                            </button>-->
+                            <a th:if="${!userEvents.contains(event)}"
+                               th:href="@{'/events/' + ${event.id} + '/subscribe'}" class="subscribe-btn">
+                                <i class="fas fa-plus"></i>
+                                Subscribe
+                            </a>
+                            <a th:if="${userEvents.contains(event)}"
+                               th:href="@{'/events/' + ${event.id} + '/unsubscribe'}" class="unsubscribe-btn">
+                                <i class="fas fa-plus"></i>
+                                UnSubscribe
+                            </a>
+                        </div>
+<!--                        <div class="training-item">-->
+<!--                            <div class="training-time">-->
+<!--                                <i class="fas fa-clock"></i>-->
+<!--                                <span>2:00 PM - 3:30 PM</span>-->
+<!--                            </div>-->
+<!--                            <div class="training-details">-->
+<!--                                <h4>Physics Fun</h4>-->
+<!--                                <p class="training-description">Discover the laws of motion with interactive demonstrations</p>-->
+<!--                                <p class="training-instructor"><i class="fas fa-user"></i> Instructor: Mr. David Chen</p>-->
+<!--                                <p class="training-capacity"><i class="fas fa-users"></i> Capacity: 20 students</p>-->
+<!--                            </div>-->
+<!--                            <button class="subscribe-btn" onclick="toggleSubscribe(this)">-->
+<!--                                <i class="fas fa-plus-circle"></i>-->
+<!--                                Subscribe-->
+<!--                            </button>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+
+<!--                &lt;!&ndash; Tuesday &ndash;&gt;-->
+<!--                <div class="day-card">-->
+<!--                    <div class="day-header">-->
+<!--                        <h3><i class="fas fa-calendar-day"></i> Tuesday</h3>-->
+<!--                    </div>-->
+<!--                    <div class="trainings-list">-->
+<!--                        <div class="training-item">-->
+<!--                            <div class="training-time">-->
+<!--                                <i class="fas fa-clock"></i>-->
+<!--                                <span>10:00 AM - 11:30 AM</span>-->
+<!--                            </div>-->
+<!--                            <div class="training-details">-->
+<!--                                <h4>Biology Discovery</h4>-->
+<!--                                <p class="training-description">Explore living organisms and ecosystems</p>-->
+<!--                                <p class="training-instructor"><i class="fas fa-user"></i> Instructor: Ms. Emily Rodriguez</p>-->
+<!--                                <p class="training-capacity"><i class="fas fa-users"></i> Capacity: 18 students</p>-->
+<!--                            </div>-->
+<!--                            <button class="subscribe-btn" onclick="toggleSubscribe(this)">-->
+<!--                                <i class="fas fa-plus-circle"></i>-->
+<!--                                Subscribe-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                        <div class="training-item">-->
+<!--                            <div class="training-time">-->
+<!--                                <i class="fas fa-clock"></i>-->
+<!--                                <span>4:00 PM - 5:30 PM</span>-->
+<!--                            </div>-->
+<!--                            <div class="training-details">-->
+<!--                                <h4>Astronomy Night</h4>-->
+<!--                                <p class="training-description">Learn about stars, planets, and the universe</p>-->
+<!--                                <p class="training-instructor"><i class="fas fa-user"></i> Instructor: Prof. Michael Brown</p>-->
+<!--                                <p class="training-capacity"><i class="fas fa-users"></i> Capacity: 12 students</p>-->
+<!--                            </div>-->
+<!--                            <button class="subscribe-btn subscribed" onclick="toggleSubscribe(this)">-->
+<!--                                <i class="fas fa-check"></i>-->
+<!--                                Subscribed-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Wednesday &ndash;&gt;-->
+<!--                <div class="day-card">-->
+<!--                    <div class="day-header">-->
+<!--                        <h3><i class="fas fa-calendar-day"></i> Wednesday</h3>-->
+<!--                    </div>-->
+<!--                    <div class="trainings-list">-->
+<!--                        <div class="training-item">-->
+<!--                            <div class="training-time">-->
+<!--                                <i class="fas fa-clock"></i>-->
+<!--                                <span>9:30 AM - 11:00 AM</span>-->
+<!--                            </div>-->
+<!--                            <div class="training-details">-->
+<!--                                <h4>Robotics Workshop</h4>-->
+<!--                                <p class="training-description">Build and program your own robots</p>-->
+<!--                                <p class="training-instructor"><i class="fas fa-user"></i> Instructor: Mr. James Wilson</p>-->
+<!--                                <p class="training-capacity"><i class="fas fa-users"></i> Capacity: 16 students</p>-->
+<!--                            </div>-->
+<!--                            <button class="subscribe-btn" onclick="toggleSubscribe(this)">-->
+<!--                                <i class="fas fa-plus-circle"></i>-->
+<!--                                Subscribe-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Thursday &ndash;&gt;-->
+<!--                <div class="day-card">-->
+<!--                    <div class="day-header">-->
+<!--                        <h3><i class="fas fa-calendar-day"></i> Thursday</h3>-->
+<!--                    </div>-->
+<!--                    <div class="trainings-list">-->
+<!--                        <div class="training-item">-->
+<!--                            <div class="training-time">-->
+<!--                                <i class="fas fa-clock"></i>-->
+<!--                                <span>11:00 AM - 12:30 PM</span>-->
+<!--                            </div>-->
+<!--                            <div class="training-details">-->
+<!--                                <h4>Environmental Science</h4>-->
+<!--                                <p class="training-description">Learn about climate, ecosystems, and sustainability</p>-->
+<!--                                <p class="training-instructor"><i class="fas fa-user"></i> Instructor: Dr. Lisa Anderson</p>-->
+<!--                                <p class="training-capacity"><i class="fas fa-users"></i> Capacity: 20 students</p>-->
+<!--                            </div>-->
+<!--                            <button class="subscribe-btn" onclick="toggleSubscribe(this)">-->
+<!--                                <i class="fas fa-plus-circle"></i>-->
+<!--                                Subscribe-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                        <div class="training-item">-->
+<!--                            <div class="training-time">-->
+<!--                                <i class="fas fa-clock"></i>-->
+<!--                                <span>3:00 PM - 4:30 PM</span>-->
+<!--                            </div>-->
+<!--                            <div class="training-details">-->
+<!--                                <h4>Science Fair Prep</h4>-->
+<!--                                <p class="training-description">Prepare your project for the annual science fair</p>-->
+<!--                                <p class="training-instructor"><i class="fas fa-user"></i> Instructor: Ms. Rachel Green</p>-->
+<!--                                <p class="training-capacity"><i class="fas fa-users"></i> Capacity: 25 students</p>-->
+<!--                            </div>-->
+<!--                            <button class="subscribe-btn" onclick="toggleSubscribe(this)">-->
+<!--                                <i class="fas fa-plus-circle"></i>-->
+<!--                                Subscribe-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Friday &ndash;&gt;-->
+<!--                <div class="day-card">-->
+<!--                    <div class="day-header">-->
+<!--                        <h3><i class="fas fa-calendar-day"></i> Friday</h3>-->
+<!--                    </div>-->
+<!--                    <div class="trainings-list">-->
+<!--                        <div class="training-item">-->
+<!--                            <div class="training-time">-->
+<!--                                <i class="fas fa-clock"></i>-->
+<!--                                <span>2:30 PM - 4:00 PM</span>-->
+<!--                            </div>-->
+<!--                            <div class="training-details">-->
+<!--                                <h4>Science Quiz Competition</h4>-->
+<!--                                <p class="training-description">Test your knowledge in a fun quiz format</p>-->
+<!--                                <p class="training-instructor"><i class="fas fa-user"></i> Instructor: Mr. Robert Taylor</p>-->
+<!--                                <p class="training-capacity"><i class="fas fa-users"></i> Capacity: 30 students</p>-->
+<!--                            </div>-->
+<!--                            <button class="subscribe-btn" onclick="toggleSubscribe(this)">-->
+<!--                                <i class="fas fa-plus-circle"></i>-->
+<!--                                Subscribe-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Saturday &ndash;&gt;-->
+<!--                <div class="day-card">-->
+<!--                    <div class="day-header">-->
+<!--                        <h3><i class="fas fa-calendar-day"></i> Saturday</h3>-->
+<!--                    </div>-->
+<!--                    <div class="trainings-list">-->
+<!--                        <div class="training-item">-->
+<!--                            <div class="training-time">-->
+<!--                                <i class="fas fa-clock"></i>-->
+<!--                                <span>10:00 AM - 12:00 PM</span>-->
+<!--                            </div>-->
+<!--                            <div class="training-details">-->
+<!--                                <h4>Field Trip: Science Museum</h4>-->
+<!--                                <p class="training-description">Visit the local science museum for hands-on learning</p>-->
+<!--                                <p class="training-instructor"><i class="fas fa-user"></i> Instructor: Dr. Sarah Johnson</p>-->
+<!--                                <p class="training-capacity"><i class="fas fa-users"></i> Capacity: 22 students</p>-->
+<!--                            </div>-->
+<!--                            <button class="subscribe-btn" onclick="toggleSubscribe(this)">-->
+<!--                                <i class="fas fa-plus-circle"></i>-->
+<!--                                Subscribe-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Sunday &ndash;&gt;-->
+<!--                <div class="day-card">-->
+<!--                    <div class="day-header">-->
+<!--                        <h3><i class="fas fa-calendar-day"></i> Sunday</h3>-->
+<!--                    </div>-->
+<!--                    <div class="trainings-list">-->
+<!--                        <p class="no-trainings">No trainings scheduled for Sunday</p>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="portal-footer">
+        <div class="container">
+            <p>&copy; 2024 Kids Portal. Made with <i class="fas fa-heart"></i> for amazing kids!</p>
+        </div>
+    </footer>
+
+    <script>
+        // Animate cards on load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.day-card').forEach((card, i) => {
+                setTimeout(() => card.classList.add('show'), 100 * i);
+            });
+            document.querySelectorAll('.club-info-card').forEach((card, i) => {
+                setTimeout(() => card.classList.add('show'), 50);
+            });
+        });
+
+        // Toggle subscribe button
+        function toggleSubscribe(button) {
+            if (button.classList.contains('subscribed')) {
+                button.classList.remove('subscribed');
+                button.innerHTML = '<i class="fas fa-plus-circle"></i> Subscribe';
+            } else {
+                button.classList.add('subscribed');
+                button.innerHTML = '<i class="fas fa-check"></i> Subscribed';
+            }
+        }
+    </script>
+</body>
+</html>
+
+

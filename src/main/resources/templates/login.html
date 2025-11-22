@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Kids Portal</title>
+    <link rel="stylesheet" href="/css/login-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<!-- Background Animation -->
+<div class="background-animation">
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+        <div class="shape shape-5"></div>
+        <div class="shape shape-6"></div>
+    </div>
+</div>
+
+<!-- Header -->
+<header class="login-header">
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-star"></i>
+            <h1>Kids Portal</h1>
+        </div>
+        <a th:href="@{/}" class="back-home">
+            <i class="fas fa-home"></i>
+            Back to Home
+        </a>
+    </div>
+</header>
+
+<!-- Main Login Section -->
+<main class="login-main">
+    <div class="container">
+        <div class="login-container">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <div class="welcome-icon">
+                    <i class="fas fa-child"></i>
+                </div>
+                <h2>Welcome Back!</h2>
+                <p>Ready for another fun day of learning and adventures?</p>
+            </div>
+
+            <!-- Login Form -->
+            <div class="login-form-container" th:object="${loginRequest}" th:method="post" th:action="@{/login}">
+                <form class="login-form" id="loginForm" th:object="${loginRequest}" th:method="post" th:action="@{/login}">
+                    <div class="form-header">
+                        <h3>
+                            <i class="fas fa-sign-in-alt"></i>
+                            Sign In
+                        </h3>
+                    </div>
+
+                    <p class="notification error" th:text="${errorMessage}"></p>
+                    <p class="notification error" th:if="${loginAttemptMessage}" th:text="${loginAttemptMessage}"></p>
+                    <div class="form-group">
+                        <label for="username" >
+                            <i class="fas fa-user"></i>
+                            Username
+                        </label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required th:field="*{username}">
+                        <p class="error-message" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Error Message</p>
+                        <div class="input-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i>
+                            Password
+                        </label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required th:field="*{password}">
+                        <p class="error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Error Message</p>
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <button type="button" class="toggle-password" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+
+<!--                    <div class="form-options">-->
+<!--                        <label class="remember-me">-->
+<!--                            <input type="checkbox" id="rememberMe">-->
+<!--                            <span class="checkmark"></span>-->
+<!--                            Remember me-->
+<!--                        </label>-->
+<!--                        <a href="#" class="forgot-password">Forgot Password?</a>-->
+<!--                    </div>-->
+
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Login</span>
+                        <div class="btn-loading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </button>
+
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+
+<!--                    <div class="social-login">-->
+<!--                        <button type="button" class="social-btn google-btn">-->
+<!--                            <i class="fab fa-google"></i>-->
+<!--                            Continue with Google-->
+<!--                        </button>-->
+<!--                        <button type="button" class="social-btn apple-btn">-->
+<!--                            <i class="fab fa-apple"></i>-->
+<!--                            Continue with Apple-->
+<!--                        </button>-->
+<!--                    </div>-->
+                </form>
+
+                <!-- Register Link -->
+                <div class="register-link">
+                    <p>Don't have an account?
+                        <a th:href="@{/register}" class="register-btn">
+                            <i class="fas fa-user-plus"></i>
+                            Create Account
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<th:block th:insert="fragments/footer :: footer"></th:block>
+<!-- Footer-->
+<!--<footer class="login-footer">-->
+<!--    <div class="container">-->
+<!--        <p>&copy; 2024 Kids Portal. Made with <i class="fas fa-heart"></i> for amazing kids!</p>-->
+<!--    </div>-->
+<!--</footer>-->
+
+<!-- Success Message -->
+<!--<div class="success-message" id="successMessage">-->
+<!--    <div class="success-content">-->
+<!--        <i class="fas fa-check-circle"></i>-->
+<!--        <h3>Login Successful!</h3>-->
+<!--        <p>Welcome back to your fun learning hub!</p>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<script>-->
+<!--    // Toggle password visibility-->
+<!--    const togglePassword = document.getElementById('togglePassword');-->
+<!--    const passwordInput = document.getElementById('password');-->
+<!--    const eyeIcon = togglePassword.querySelector('i');-->
+
+<!--    togglePassword.addEventListener('click', function() {-->
+<!--        if (passwordInput.type === 'password') {-->
+<!--            passwordInput.type = 'text';-->
+<!--            eyeIcon.classList.remove('fa-eye');-->
+<!--            eyeIcon.classList.add('fa-eye-slash');-->
+<!--        } else {-->
+<!--            passwordInput.type = 'password';-->
+<!--            eyeIcon.classList.remove('fa-eye-slash');-->
+<!--            eyeIcon.classList.add('fa-eye');-->
+<!--        }-->
+<!--    });-->
+
+<!--    // Form submission-->
+<!--    const loginForm = document.getElementById('loginForm');-->
+<!--    const loginBtn = document.querySelector('.login-btn');-->
+<!--    const btnText = loginBtn.querySelector('span');-->
+<!--    const btnLoading = loginBtn.querySelector('.btn-loading');-->
+<!--    const successMessage = document.getElementById('successMessage');-->
+
+<!--    loginForm.addEventListener('submit', function(e) {-->
+<!--        e.preventDefault();-->
+
+<!--        // Show loading state-->
+<!--        loginBtn.classList.add('loading');-->
+<!--        btnText.style.display = 'none';-->
+<!--        btnLoading.style.display = 'inline-block';-->
+
+<!--        // Simulate login process-->
+<!--        setTimeout(() => {-->
+<!--            // Hide loading state-->
+<!--            loginBtn.classList.remove('loading');-->
+<!--            btnText.style.display = 'inline';-->
+<!--            btnLoading.style.display = 'none';-->
+
+<!--            // Show success message-->
+<!--            successMessage.classList.add('show');-->
+
+<!--            // Redirect after 2 seconds-->
+<!--            setTimeout(() => {-->
+<!--                window.location.href = 'index.html';-->
+<!--            }, 2000);-->
+<!--        }, 2000);-->
+<!--    });-->
+
+<!--    // Input focus effects-->
+<!--    const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');-->
+<!--    inputs.forEach(input => {-->
+<!--        input.addEventListener('focus', function() {-->
+<!--            this.parentElement.classList.add('focused');-->
+<!--        });-->
+
+<!--        input.addEventListener('blur', function() {-->
+<!--            if (!this.value) {-->
+<!--                this.parentElement.classList.remove('focused');-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+
+<!--    // Social login buttons-->
+<!--    const socialBtns = document.querySelectorAll('.social-btn');-->
+<!--    socialBtns.forEach(btn => {-->
+<!--        btn.addEventListener('click', function() {-->
+<!--            this.classList.add('clicked');-->
+<!--            setTimeout(() => {-->
+<!--                this.classList.remove('clicked');-->
+<!--            }, 200);-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+</body>
+</html>

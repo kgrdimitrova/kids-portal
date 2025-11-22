@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Kids Portal</title>
+    <link rel="stylesheet" href="/css/register-styles.css">
+    <link rel="stylesheet" href="/css/global-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="background-animation">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+            <div class="shape shape-6"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="register-header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-star"></i>
+                <h1>Kids Portal</h1>
+            </div>
+            <a th:href="@{/home}" class="back-home">
+                <i class="fas fa-home"></i>
+                Back to Home
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Register Section -->
+    <main class="register-main">
+        <div class="container">
+            <div class="register-container">
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <div class="welcome-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h2>Create Your Account</h2>
+                    <p>Join our fun community and start your learning adventure!</p>
+                </div>
+
+                <!-- Register Form -->
+                <div class="register-form-container">
+                    <form class="register-form" id="registerForm" th:action="@{/register}" th:object="${registerRequest}" th:method="post">
+                        <div class="form-header">
+                            <h3>
+                                <i class="fas fa-user-plus"></i>
+                                Sign Up
+                            </h3>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-username">
+                                <i class="fas fa-user"></i>
+                                Username
+                            </label>
+                            <input type="text" id="reg-username" name="username" placeholder="Choose a username" required th:field="*{username}">
+                            <p class="error-message" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Error Message</p>
+                            <p class="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-email">
+                                <i class="fas fa-envelope"></i>
+                                Email
+                            </label>
+                            <input type="text" id="reg-email" name="email" placeholder="Enter your email" required th:field="*{email}">
+                            <p class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Error Message</p>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-password">
+                                <i class="fas fa-lock"></i>
+                                Password
+                            </label>
+                            <input type="password" id="reg-password" name="password" placeholder="Create a password" required th:field="*{password}">
+                            <p class="error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Error Message</p>
+                            <button type="button" class="toggle-password" data-target="reg-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Location
+                            </label>
+                            <select id="reg-location" name="location" required th:field="*{location}">
+                                <option th:each="location : ${T(com.portal.kids.common.Location).values}" th:value="${location}" th:text="${location}"></option>
+                            </select>
+                            </label>
+                            <div class="input-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-options">
+                            <label class="remember-me">
+                                <input type="checkbox" id="terms" required>
+                                <span class="checkmark"></span>
+                                I agree to the Terms & Privacy
+                            </label>
+                            <a th:href="@{/login}" class="signin-link">Already have an account?</a>
+                        </div>
+
+<!--                        <ul class="password-tips">-->
+<!--                            <li id="tip-length">At least 6 characters</li>-->
+<!--                            <li id="tip-match">Passwords must match</li>-->
+<!--                        </ul>-->
+
+                        <button type="submit" class="register-btn">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Create Account</span>
+                            <div class="btn-loading">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </div>
+                        </button>
+
+                        <div class="divider">
+                            <span>or</span>
+                        </div>
+
+<!--                        <div class="social-register">-->
+<!--                            <button type="button" class="social-btn google-btn">-->
+<!--                                <i class="fab fa-google"></i>-->
+<!--                                Sign up with Google-->
+<!--                            </button>-->
+<!--                            <button type="button" class="social-btn apple-btn">-->
+<!--                                <i class="fab fa-apple"></i>-->
+<!--                                Sign up with Apple-->
+<!--                            </button>-->
+<!--                        </div>-->
+                    </form>
+
+                    <!-- Login Link -->
+                    <div class="login-link">
+                        <p>Already part of the fun?
+                            <a th:href="@{/login}" class="login-btn-link">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Login Instead
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <th:block th:insert="fragments/footer :: footer"></th:block>
+    <!-- Footer -->
+<!--    <footer class="register-footer">-->
+<!--        <div class="container">-->
+<!--            <p>&copy; 2024 Kids Portal. Made with <i class="fas fa-heart"></i> for amazing kids!</p>-->
+<!--        </div>-->
+<!--    </footer>-->
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+        <div class="success-content">
+            <i class="fas fa-check-circle"></i>
+            <h3>Account Created!</h3>
+            <p>Welcome to your fun learning hub!</p>
+        </div>
+    </div>
+
+<!--    <script>-->
+<!--        // Toggle password visibility for password fields-->
+<!--        document.querySelectorAll('.toggle-password').forEach(btn => {-->
+<!--            btn.addEventListener('click', () => {-->
+<!--                const targetId = btn.getAttribute('data-target');-->
+<!--                const input = document.getElementById(targetId);-->
+<!--                const icon = btn.querySelector('i');-->
+<!--                if (input.type === 'password') {-->
+<!--                    input.type = 'text';-->
+<!--                    icon.classList.remove('fa-eye');-->
+<!--                    icon.classList.add('fa-eye-slash');-->
+<!--                } else {-->
+<!--                    input.type = 'password';-->
+<!--                    icon.classList.remove('fa-eye-slash');-->
+<!--                    icon.classList.add('fa-eye');-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+
+<!--        // Simple live validation-->
+<!--        const passwordInput = document.getElementById('reg-password');-->
+<!--        const confirmInput = document.getElementById('reg-confirm');-->
+<!--        const tipLength = document.getElementById('tip-length');-->
+<!--        const tipMatch = document.getElementById('tip-match');-->
+
+<!--        function updateTips() {-->
+<!--            if (passwordInput.value.length >= 6) {-->
+<!--                tipLength.classList.add('ok');-->
+<!--            } else {-->
+<!--                tipLength.classList.remove('ok');-->
+<!--            }-->
+
+<!--            if (confirmInput.value && confirmInput.value === passwordInput.value) {-->
+<!--                tipMatch.classList.add('ok');-->
+<!--            } else {-->
+<!--                tipMatch.classList.remove('ok');-->
+<!--            }-->
+<!--        }-->
+
+<!--        passwordInput.addEventListener('input', updateTips);-->
+<!--        confirmInput.addEventListener('input', updateTips);-->
+
+<!--        // Form submission behavior-->
+<!--        const registerForm = document.getElementById('registerForm');-->
+<!--        const registerBtn = document.querySelector('.register-btn');-->
+<!--        const btnText = registerBtn.querySelector('span');-->
+<!--        const btnLoading = registerBtn.querySelector('.btn-loading');-->
+<!--        const successMessage = document.getElementById('successMessage');-->
+
+<!--        registerForm.addEventListener('submit', function(e) {-->
+<!--            e.preventDefault();-->
+<!--            if (passwordInput.value.length < 6 || passwordInput.value !== confirmInput.value) {-->
+<!--                updateTips();-->
+<!--                return;-->
+<!--            }-->
+
+<!--            // Show loading state-->
+<!--            registerBtn.classList.add('loading');-->
+<!--            btnText.style.display = 'none';-->
+<!--            btnLoading.style.display = 'inline-block';-->
+
+<!--            // Simulate register process-->
+<!--            setTimeout(() => {-->
+<!--                // Hide loading state-->
+<!--                registerBtn.classList.remove('loading');-->
+<!--                btnText.style.display = 'inline';-->
+<!--                btnLoading.style.display = 'none';-->
+
+<!--                // Show success message and redirect-->
+<!--                successMessage.classList.add('show');-->
+<!--                setTimeout(() => {-->
+<!--                    window.location.href = 'login.html';-->
+<!--                }, 2000);-->
+<!--            }, 2000);-->
+<!--        });-->
+
+<!--        // Social buttons click feedback-->
+<!--        document.querySelectorAll('.social-btn').forEach(btn => {-->
+<!--            btn.addEventListener('click', function() {-->
+<!--                this.classList.add('clicked');-->
+<!--                setTimeout(() => this.classList.remove('clicked'), 200);-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+</body>
+</html>
+

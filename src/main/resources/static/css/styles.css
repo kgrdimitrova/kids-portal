@@ -1,0 +1,1012 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header Styles */
+.header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo i {
+    font-size: 2rem;
+    color: #ff6b6b;
+    animation: bounce 2s infinite;
+}
+
+.logo h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.nav {
+    display: flex;
+    gap: 15px;
+}
+
+/* Button Styles */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(45deg, #4ecdc4, #6dd5ed);
+    color: white;
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+}
+
+/* Main Content */
+.main {
+    padding: 2rem 0;
+}
+
+/* Welcome Section */
+.welcome-section {
+    text-align: center;
+    margin-bottom: 3rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.welcome-section h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.welcome-section p {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Weather Section */
+.weather-section {
+    margin-bottom: 3rem;
+}
+
+.weather-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.weather-icon {
+    font-size: 4rem;
+    color: #ffd93d;
+    animation: pulse 2s infinite;
+}
+
+/* Weather Icon Variants */
+/* Sunny - default, already styled above */
+
+/* Cloudy */
+.weather-icon.cloudy {
+    color: #64b5f6;
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Windy */
+.weather-icon.windy {
+    color: #64b5f6;
+    animation: sway 2s ease-in-out infinite;
+}
+
+/* Foggy */
+.weather-icon.foggy {
+    color: #bdbdbd;
+    animation: fade 3s ease-in-out infinite;
+    opacity: 0.7;
+}
+
+/* Raining */
+.weather-icon.raining {
+    color: #64b5f6;
+    animation: bounce 1s ease-in-out infinite;
+}
+
+/* Snowing */
+.weather-icon.snowing {
+    color: #e3f2fd;
+    animation: spin 3s linear infinite;
+}
+
+/* Sun and Cloudy (Partly Cloudy) */
+.weather-icon.sun-cloudy {
+    position: relative;
+    animation: pulse 2.5s infinite;
+}
+
+.weather-icon.sun-cloudy i.fa-cloud {
+    color: #64b5f6; /* Blue for cloud */
+    position: relative;
+    z-index: 1;
+}
+
+.weather-icon.sun-cloudy i.fa-sun {
+    color: #ffd93d; /* Yellow for sun */
+    position: absolute;
+    left: 0.2em;
+    top: -0.15em;
+    font-size: 0.65em;
+    z-index: 2;
+    animation: pulse 2.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes sway {
+    0%, 100% {
+        transform: rotate(-5deg);
+    }
+    50% {
+        transform: rotate(5deg);
+    }
+}
+
+@keyframes fade {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(5px);
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.weather-info h3 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.temperature {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.temp-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ff6b6b;
+}
+
+.temp-description {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.weather-location {
+    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Filters Section */
+.filters-section {
+    margin-bottom: 2rem;
+}
+
+.filters-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.filters-card h3 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3rem;
+    color: #333;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filters-card h3 i {
+    color: #667eea;
+}
+
+.filters-row {
+    display: flex;
+    gap: 1.5rem;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.filter-select {
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    background: white;
+    min-width: 150px;
+    transition: border-color 0.3s ease;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Events Section */
+.events-section {
+    margin-bottom: 3rem;
+}
+
+.events-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+/* Activities Section (Events and Clubs) */
+.activities-section {
+    margin-bottom: 3rem;
+}
+
+.activities-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.events-today, .events-tomorrow, .clubs-today {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.events-today h3, .events-tomorrow h3, .clubs-today h3 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.events-today h3 i {
+    color: #ff6b6b;
+}
+
+.events-tomorrow h3 i {
+    color: #4ecdc4;
+}
+
+.clubs-today h3 i {
+    color: #45b7d1;
+}
+
+.events-list, .clubs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.event-item, .club-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 15px;
+    border-left: 4px solid #ff6b6b;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.event-item:hover, .club-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.club-item {
+    border-left-color: #45b7d1;
+}
+
+.event-item.compact {
+    padding: 0.8rem;
+    border-left-color: #4ecdc4;
+}
+
+.event-time {
+    font-weight: 600;
+    color: #ff6b6b;
+    min-width: 80px;
+    font-size: 0.9rem;
+}
+
+.event-item.compact .event-time {
+    color: #4ecdc4;
+    min-width: 70px;
+    font-size: 0.8rem;
+}
+
+.event-details, .club-details {
+    flex: 1;
+}
+
+.event-details h4, .club-details h4 {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 0.3rem;
+}
+
+.event-details h4 a, .club-details h4 a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.event-details h4 a:hover {
+    color: #ff6b6b;
+}
+
+.club-details h4 a:hover {
+    color: #45b7d1;
+}
+
+.event-item.compact .event-details h4 {
+    font-size: 1rem;
+    margin-bottom: 0;
+}
+
+.event-details p, .club-details p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.event-icon, .club-icon {
+    font-size: 1.5rem;
+    color: #ff6b6b;
+    opacity: 0.7;
+}
+
+.club-icon {
+    color: #45b7d1;
+}
+
+/* Subscribe Button */
+.subscribe-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.subscribe-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.subscribe-btn.compact {
+    padding: 6px 12px;
+    font-size: 0.7rem;
+}
+
+.subscribe-btn.subscribed {
+    background: linear-gradient(45deg, #4caf50, #66bb6a);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.subscribe-btn.subscribed:hover {
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+/* Unsubscribe Event Button */
+.unsubscribe-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #f44336, #ef5350);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
+    text-decoration: none;
+}
+
+.unsubscribe-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+}
+
+.unsubscribe-btn.compact {
+    padding: 6px 12px;
+    font-size: 0.7rem;
+}
+
+/* Leave Club Button */
+.leave-club-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #f44336, #ef5350);
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+    text-decoration: none;
+}
+
+.leave-club-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+}
+
+/* Join Club Button */
+.join-club-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #4caf50, #66bb6a);
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    text-decoration: none;
+}
+
+.join-club-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+/* Upcoming Events */
+.upcoming-events {
+    margin-bottom: 3rem;
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.event-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    position: relative;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.event-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.event-date {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.event-type-badge {
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.event-type-badge.music {
+    background: rgba(78, 205, 196, 0.2);
+    color: #4ecdc4;
+}
+
+.event-type-badge.science {
+    background: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+}
+
+.event-type-badge.arts {
+    background: rgba(69, 183, 209, 0.2);
+    color: #45b7d1;
+}
+
+.event-card-content {
+    margin-bottom: 1rem;
+}
+
+.event-card-content h4 {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.event-card-content p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.event-card-content .event-time {
+    font-weight: 600;
+    color: #667eea;
+    font-size: 0.8rem;
+}
+
+/* Quick Actions */
+.quick-actions {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.quick-actions h3 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.action-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.action-btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.action-btn i {
+    font-size: 2rem;
+}
+
+/* Footer */
+.footer {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding: 2rem 0;
+    margin-top: 3rem;
+}
+
+.footer i {
+    color: #ff6b6b;
+    animation: heartbeat 1.5s infinite;
+}
+
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+    14% {
+        transform: scale(1.1);
+    }
+    28% {
+        transform: scale(1);
+    }
+    42% {
+        transform: scale(1.1);
+    }
+    70% {
+        transform: scale(1);
+    }
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 2rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #ff6b6b;
+}
+
+.modal h2 {
+    font-family: 'Fredoka One', cursive;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #ff6b6b;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+/* Notification System */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 3000;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+    border-left: 4px solid #667eea;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    border-left-color: #4caf50;
+}
+
+.notification.success i {
+    color: #4caf50;
+}
+
+.notification.info {
+    border-left-color: #2196f3;
+}
+
+.notification.info i {
+    color: #2196f3;
+}
+
+.notification span {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header .container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .nav {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .logo h1 {
+        font-size: 1.5rem;
+    }
+
+    .welcome-section h2 {
+        font-size: 2rem;
+    }
+
+    .weather-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .filters-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-select {
+        min-width: auto;
+    }
+
+    .events-container {
+        grid-template-columns: 1fr;
+    }
+
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .temp-number {
+        font-size: 2.5rem;
+    }
+
+    .event-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
+    }
+
+    .event-item .subscribe-btn {
+        align-self: flex-end;
+    }
+
+    .notification {
+        right: 10px;
+        left: 10px;
+        transform: translateY(-100px);
+    }
+
+    .notification.show {
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .welcome-section, .weather-card, .events-today, .events-tomorrow, .quick-actions {
+        padding: 1.5rem;
+    }
+
+    .action-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}

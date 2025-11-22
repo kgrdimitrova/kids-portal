@@ -1,0 +1,680 @@
+/* Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+.portal-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.portal-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo i {
+    font-size: 2rem;
+    color: #ff6b6b;
+    animation: bounce 2s infinite;
+}
+
+.logo h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.top-nav {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 25px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    background: linear-gradient(45deg, #4ecdc4, #6dd5ed);
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+    transition: transform .2s, box-shadow .2s;
+}
+
+.nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0)
+    }
+    40% {
+        transform: translateY(-10px)
+    }
+    60% {
+        transform: translateY(-5px)
+    }
+}
+
+/* Main */
+.portal-main {
+    padding: 1.5rem 0;
+}
+
+.layout-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+/* Left Sidebar */
+.left-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Main Content */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Status Tag */
+.profile-status {
+    margin: 8px 0;
+}
+
+.status-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-tag.active {
+    background: linear-gradient(45deg, #4caf50, #66bb6a);
+    color: white;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.status-tag.inactive {
+    background: linear-gradient(45deg, #f44336, #ef5350);
+    color: white;
+    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
+}
+
+/* Profile Card */
+.profile-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.profile-banner {
+    height: 120px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    position: relative;
+}
+
+.profile-avatar {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    border: 5px solid white;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.status-badge.active {
+    position: absolute;
+    right: -2px;
+    bottom: 6px;
+    width: 16px;
+    height: 16px;
+    background: #4caf50;
+    border: 3px solid white;
+    border-radius: 50%;
+}
+
+.status-badge.inactive {
+    position: absolute;
+    right: -2px;
+    bottom: 6px;
+    width: 16px;
+    height: 16px;
+    background: #f44336;
+    border: 3px solid white;
+    border-radius: 50%;
+}
+
+.profile-info {
+    padding: 56px 18px 12px;
+    text-align: center;
+}
+
+.profile-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.6rem;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.profile-username, .profile-email, .profile-created, .profile-location {
+    color: #666;
+    font-size: 0.95rem;
+    margin: 4px 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 12px 18px 18px;
+}
+
+.btn {
+    padding: 10px 12px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+}
+
+.edit-btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, .3);
+}
+
+.message-btn {
+    background: linear-gradient(45deg, #4ecdc4, #6dd5ed);
+    box-shadow: 0 4px 15px rgba(78, 205, 196, .3);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .2);
+}
+
+/* Cards */
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 1.2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity .3s ease, transform .3s ease;
+}
+
+.card.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.card h3 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.activities-today h3 i {
+    color: #ff6b6b;
+}
+
+.tomorrow h3 i {
+    color: #4ecdc4;
+}
+
+.clubs h3 i {
+    color: #45b7d1;
+}
+
+/* Compact Weather */
+.compact-weather {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.compact-weather .weather-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.compact-weather .weather-row > div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.compact-weather img {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(118, 75, 162, 0.25) 100%);
+    border-radius: 10px;
+    padding: 0.4rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    display: block;
+    max-width: 60px;
+    max-height: 60px;
+    object-fit: contain;
+}
+
+.compact-weather .temp {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #ff6b6b;
+}
+
+.compact-weather .loc {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Compact Profile */
+.compact-profile {
+    padding: 1rem;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0.8rem;
+}
+
+.profile-avatar-small {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 3px solid white;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    position: relative;
+}
+
+.profile-avatar-small img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-name-section {
+    flex: 1;
+}
+
+.profile-name-section h3 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: #333;
+    margin: 0;
+}
+
+.profile-name-section .status-tag {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    margin-top: 4px;
+}
+
+.profile-details {
+    margin: 0.8rem 0;
+}
+
+.profile-detail {
+    color: #666;
+    font-size: 0.85rem;
+    margin: 3px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.profile-actions-compact {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-compact {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: transform .2s;
+    font-size: 0.8rem;
+}
+
+/* Activity Grid */
+.activity-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+}
+
+.activity-item-compact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 1.5rem 10px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    border-left: 3px solid #ff6b6b;
+    transition: transform .2s, box-shadow .2s;
+}
+
+.activity-item-compact:hover {
+    transform: translateX(3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.activity-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+}
+
+.activity-info {
+    flex: 1;
+}
+
+.activity-info .time {
+    font-weight: 700;
+    color: #ff6b6b;
+    font-size: 0.8rem;
+    margin-bottom: 2px;
+}
+
+.activity-info h4 {
+    color: #333;
+    font-size: 0.9rem;
+    margin: 0 0 2px 0;
+}
+
+.activity-info p {
+    color: #666;
+    font-size: 0.75rem;
+    margin: 0;
+}
+
+/* Tomorrow List */
+.tomorrow-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tomorrow-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+    border-left: 3px solid #4ecdc4;
+}
+
+.tomorrow-item .time {
+    font-weight: 700;
+    color: #4ecdc4;
+    font-size: 0.8rem;
+    min-width: 60px;
+}
+
+.tomorrow-item h4 {
+    color: #333;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Clubs Grid */
+.clubs-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.club-item-compact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+    transition: transform .2s, box-shadow .2s;
+}
+
+.club-item-compact:hover {
+    transform: translateX(3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.club-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--color) 18%, white);
+    color: var(--color);
+    font-size: 0.9rem;
+}
+
+.club-info {
+    flex: 1;
+}
+
+.club-info h4 {
+    color: #333;
+    font-size: 0.85rem;
+    margin: 0 0 2px 0;
+}
+
+.chip {
+    padding: 4px 8px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    font-weight: 600;
+    font-size: 0.7rem;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, .3);
+}
+
+/* Weather Section */
+.weather-section {
+    margin-bottom: 2rem;
+}
+
+.quick-weather .weather-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.quick-weather i {
+    color: #ffd93d;
+    font-size: 1.6rem;
+    animation: pulse 2s infinite;
+}
+
+.quick-weather .temp {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #ff6b6b;
+}
+
+.quick-weather .loc {
+    color: #666;
+    font-size: .95rem;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1)
+    }
+    50% {
+        transform: scale(1.1)
+    }
+    100% {
+        transform: scale(1)
+    }
+}
+
+/* Right column */
+
+/* Footer */
+.portal-footer {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding: 2rem 0;
+    margin-top: 2rem;
+}
+
+.portal-footer i {
+    color: #ff6b6b;
+    animation: heartbeat 1.5s infinite;
+}
+
+@keyframes heartbeat {
+    0% {
+        transform: scale(1)
+    }
+    14% {
+        transform: scale(1.1)
+    }
+    28% {
+        transform: scale(1)
+    }
+    42% {
+        transform: scale(1.1)
+    }
+    70% {
+        transform: scale(1)
+    }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .layout-grid {
+        grid-template-columns: 280px 1fr;
+    }
+
+    .activity-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .portal-header .container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .layout-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .left-sidebar {
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    .activity-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .card {
+        padding: 1rem;
+    }
+
+    .left-sidebar {
+        flex-direction: column;
+    }
+
+    .activity-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+

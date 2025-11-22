@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Kids Portal</title>
+    <link rel="stylesheet" href="/css/profile-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="portal-header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-star"></i>
+                <h1>Kids Portal</h1>
+            </div>
+            <nav class="top-nav">
+                <a th:href="@{/home}" class="nav-btn">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+<!--                <a href="profile.html" class="nav-btn active">-->
+<!--                    <i class="fas fa-user"></i>-->
+<!--                    Profile-->
+<!--                </a>-->
+                <a th:href="@{/logout}" class="nav-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="portal-main">
+        <div class="container">
+            <div class="profile-layout">
+                <!-- Simple Profile Section -->
+
+                <section class="simple-profile">
+                    <div class="profile-card">
+                        <div class="profile-header-simple">
+                            <h2><i class="fas fa-user"></i> My Profile</h2>
+                        </div>
+                        <form class="form" th:action="@{'/users/' + ${user.id} + '/profile'}" th:method="PUT" th:object="${editProfileRequest}">
+                            <div class="form-group">
+                                <label for="profilePicture">Picture</label>
+
+                                <!-- Preview the current or fallback image -->
+                                <img th:src="${#strings.isEmpty(user.profilePicture) ?
+                  'https://tse2.mm.bing.net/th/id/OIP.1WxXX9a1BHpvMvZ8P1R0AAAAAA?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3'
+                  : user.profilePicture}"
+                                     alt="Club picture"
+                                     style="max-width: 200px; border-radius: 8px; display: block; margin-bottom: 8px;">
+
+                                <!-- Allow manual update of the picture URL -->
+                                <input type="text"
+                                       id="profilePicture"
+                                       name="picture"
+                                       th:field="*{profilePictureUrl}"
+                                       placeholder="Paste image URL here"
+                                       class="form-control">
+
+                                <small class="text-muted">Paste a direct image URL (e.g., https://example.com/image.png)</small>
+                            </div>
+
+                            <!-- Profile Information -->
+                            <div class="profile-info-simple">
+                                <div class="info-item-simple">
+                                    <label>ID:</label>
+                                    <span th:text="${user.id}" id="userId" class="read-only">#12345</span>
+                                </div>
+
+                                <div class="info-item-simple">
+                                    <label>Username:</label>
+                                    <span th:text="${user.username}" id="userName" class="read-only">username</span>
+                                </div>
+
+                                <div class="info-item-simple editable">
+                                    <label>Location:</label>
+                                    <select th:field="*{location}" id="userLocation" class="editable-input">
+                                        <option th:each="location : ${T(com.portal.kids.common.Location).values()}" th:value="${location}" th:text="${location.getDisplayName()}">abv</option>
+                                    </select>
+                                </div>
+
+                                <div class="info-item-simple editable">
+<!--                                    <p class="alert-warning" th:if="${#fields.hasErrors('email')}">Invalid email format</p>-->
+                                    <label>Email:</label>
+                                    <input th:field="*{email}" class="editable-input" type="text" id="userEmail" value="test@email.com" placeholder="Enter your email"/>
+                                </div>
+                            </div>
+
+                            <!-- Save Button -->
+                            <div class="profile-actions-simple">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-save"></i>
+                                    Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+<!--    <footer class="portal-footer">-->
+<!--        <div class="container">-->
+<!--            <p>&copy; 2024 Kids Portal. Made with <i class="fas fa-heart"></i> for amazing kids!</p>-->
+<!--        </div>-->
+<!--    </footer>-->
+
+    <th:block th:insert="fragments/footer :: footer"></th:block>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editProfileModal')">&times;</span>
+            <h2>Edit Profile</h2>
+            <form id="editProfileForm">
+                <div class="form-group">
+                    <label for="editName">Full Name:</label>
+                    <input type="text" id="editName" value="Alex Johnson" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email:</label>
+                    <input type="email" id="editEmail" value="alex.johnson@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="editPhone">Phone:</label>
+                    <input type="tel" id="editPhone" value="+1 (555) 123-4567">
+                </div>
+                <div class="form-group">
+                    <label for="editLocation">Location:</label>
+                    <input type="text" id="editLocation" value="New York, NY" required>
+                </div>
+                <div class="form-group">
+                    <label for="editSchool">School:</label>
+                    <input type="text" id="editSchool" value="Sunshine Elementary School">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editProfileModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        let originalValues = {};
+        let isEditing = false;
+
+        // Profile picture functionality
+        function editProfilePicture() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                        showNotification('File size must be less than 5MB', 'error');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('profileImage').src = e.target.result;
+                        showNotification('Profile picture updated!', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        // Toggle edit mode for individual fields
+        function toggleEdit(fieldId) {
+            const input = document.getElementById(fieldId);
+            const editBtn = input.nextElementSibling;
+
+            if (input.disabled) {
+                // Enable editing
+                input.disabled = false;
+                input.focus();
+                if (input.tagName === 'INPUT') {
+                    input.select();
+                }
+                editBtn.innerHTML = '<i class="fas fa-check"></i>';
+                editBtn.onclick = () => saveField(fieldId);
+
+                // Store original value
+                originalValues[fieldId] = input.value;
+
+                // Show save/cancel buttons
+                document.getElementById('saveBtn').style.display = 'inline-flex';
+                document.getElementById('cancelBtn').style.display = 'inline-flex';
+                isEditing = true;
+
+                showNotification('Field is now editable', 'info');
+            }
+        }
+
+        // Toggle edit mode for location combobox
+        function toggleEditLocation() {
+            const select = document.getElementById('userLocation');
+            const editBtn = select.nextElementSibling;
+
+            if (select.disabled) {
+                // Enable editing
+                select.disabled = false;
+                editBtn.innerHTML = '<i class="fas fa-check"></i>';
+                editBtn.onclick = () => saveLocationField();
+
+                // Store original value
+                originalValues['userLocation'] = select.value;
+
+                // Show save/cancel buttons
+                document.getElementById('saveBtn').style.display = 'inline-flex';
+                document.getElementById('cancelBtn').style.display = 'inline-flex';
+                isEditing = true;
+
+                showNotification('Location is now editable', 'info');
+            }
+        }
+
+        // Handle location change
+        function handleLocationChange() {
+            const select = document.getElementById('userLocation');
+            if (!select.disabled) {
+                // Location changed, user is editing
+                showNotification('Location changed. Click check to save.', 'info');
+            }
+        }
+
+        // Save location field
+        function saveLocationField() {
+            const select = document.getElementById('userLocation');
+            const editBtn = select.nextElementSibling;
+
+            // Disable editing
+            select.disabled = true;
+            editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+            editBtn.onclick = () => toggleEditLocation();
+
+            showNotification('Location updated!', 'success');
+
+            // Check if all fields are saved
+            checkEditingState();
+        }
+
+        // Save individual field
+        function saveField(fieldId) {
+            const input = document.getElementById(fieldId);
+            const editBtn = input.nextElementSibling;
+
+            // Validate email
+            if (fieldId === 'userEmail') {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(input.value)) {
+                    showNotification('Please enter a valid email address', 'error');
+                    input.focus();
+                    return;
+                }
+            }
+
+            // Disable editing
+            input.disabled = true;
+            editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+            editBtn.onclick = () => toggleEdit(fieldId);
+
+            showNotification(`${fieldId === 'userEmail' ? 'Email' : 'Location'} updated!`, 'success');
+
+            // Check if all fields are saved
+            checkEditingState();
+        }
+
+        // Save all changes
+        function saveProfile() {
+            const location = document.getElementById('userLocation').value;
+            const email = document.getElementById('userEmail').value;
+
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showNotification('Please enter a valid email address', 'error');
+                document.getElementById('userEmail').focus();
+                return;
+            }
+
+            // Save changes (simulate API call)
+            console.log('Saving profile:', { location, email });
+
+            // Disable all editing
+            const inputs = document.querySelectorAll('.editable-input');
+            inputs.forEach(input => {
+                input.disabled = true;
+                const editBtn = input.nextElementSibling;
+                editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+                if (input.id === 'userLocation') {
+                    editBtn.onclick = () => toggleEditLocation();
+                } else {
+                    editBtn.onclick = () => toggleEdit(input.id);
+                }
+            });
+
+            // Hide save/cancel buttons
+            document.getElementById('saveBtn').style.display = 'none';
+            document.getElementById('cancelBtn').style.display = 'none';
+            isEditing = false;
+            originalValues = {};
+
+            showNotification('Profile saved successfully!', 'success');
+        }
+
+        // Cancel editing
+        function cancelEdit() {
+            // Restore original values
+            Object.keys(originalValues).forEach(fieldId => {
+                const input = document.getElementById(fieldId);
+                input.value = originalValues[fieldId];
+                input.disabled = true;
+
+                const editBtn = input.nextElementSibling;
+                editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+                if (fieldId === 'userLocation') {
+                    editBtn.onclick = () => toggleEditLocation();
+                } else {
+                    editBtn.onclick = () => toggleEdit(fieldId);
+                }
+            });
+
+            // Hide save/cancel buttons
+            document.getElementById('saveBtn').style.display = 'none';
+            document.getElementById('cancelBtn').style.display = 'none';
+            isEditing = false;
+            originalValues = {};
+
+            showNotification('Changes cancelled', 'info');
+        }
+
+        // Check if any field is being edited
+        function checkEditingState() {
+            const inputs = document.querySelectorAll('.editable-input');
+            const hasChanges = Array.from(inputs).some(input => !input.disabled);
+
+            if (!hasChanges && isEditing) {
+                document.getElementById('saveBtn').style.display = 'none';
+                document.getElementById('cancelBtn').style.display = 'none';
+                isEditing = false;
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const editableFields = document.querySelectorAll('.editable-input');
+
+            // Make all editable inputs immediately usable
+            editableFields.forEach(field => field.disabled = false);
+
+            // Store original values (optional, if you want undo/cancel later)
+            editableFields.forEach(field => {
+                field.setAttribute('data-original', field.value);
+            });
+
+            // Animate profile card (existing)
+            const profileCard = document.querySelector('.profile-card');
+            setTimeout(() => {
+                profileCard.style.opacity = '1';
+                profileCard.style.transform = 'translateY(0)';
+            }, 200);
+        });
+    </script>
+</body>
+</html>

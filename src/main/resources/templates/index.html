@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Portal - Events & Activities</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Open+Sans:wght@400;600;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<!-- Header -->
+<header class="header">
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-star"></i>
+            <h1>Kids Portal</h1>
+        </div>
+        <nav class="nav">
+            <a th:if="${user != null}" th:href="@{/home}" class="btn btn-primary">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+            <a th:if="${user == null}" th:href="@{/login}" class="btn btn-secondary">
+                <i class="fas fa-sign-in-alt"></i>
+                Login
+            </a>
+            <a th:if="${user == null}" th:href="@{/register}" class="btn btn-secondary">
+                <i class="fas fa-user-plus"></i>
+                Register
+            </a>
+            <a th:if="${user != null}" th:href="@{/events/create-event}" class="btn btn-secondary">
+                <i class="fas fa-right-from-bracket"></i>
+                Create Event
+            </a>
+            <a th:if="${user != null}" th:href="@{/clubs/create-club}" class="btn btn-secondary">
+                <i class="fas fa-right-from-bracket"></i>
+                Create Club
+            </a>
+            <a th:if="${user != null}" th:href="@{/logout}" class="btn btn-secondary">
+                <i class="fas fa-right-from-bracket"></i>
+                Logout
+            </a>
+        </nav>
+    </div>
+</header>
+
+<main class="main">
+    <div class="container">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h2>Welcome to Kids Portal!</h2>
+            <p>Discover amazing events, activities, and clubs designed just for kids. Join our community and make new
+                friends while having fun!</p>
+        </section>
+
+        <!-- Weather Section -->
+        <!--        <section class="weather-section">-->
+        <!--            <div class="weather-card">-->
+        <!--&lt;!&ndash;                <div class="weather-icon sun-cloudy">&ndash;&gt;-->
+        <!--&lt;!&ndash;                    <i class="fas fa-cloud"></i>&ndash;&gt;-->
+        <!--&lt;!&ndash;                    <i class="fas fa-sun"></i>&ndash;&gt;-->
+        <!--&lt;!&ndash;                </div>&ndash;&gt;-->
+        <!--                <div class="weather-info">-->
+        <!--                    <h3>Today's Weather</h3>-->
+        <!--                    <p><strong>Temperature:</strong> <span th:text="${weather.main.temp}"></span> °C</p>-->
+        <!--                    <p><strong>Condition:</strong> <span th:text="${weather.weather[0].description}"></span></p>-->
+        <!--&lt;!&ndash;                    <p><strong>Humidity:</strong> <span th:text="${weather.main.humidity}"></span>%</p>&ndash;&gt;-->
+        <!--                    <p><strong>Wind Speed:</strong> <span th:text="${weather.wind.speed}"></span> m/s</p>-->
+        <!--                    <p><strong>City:</strong> <span th:text="${weather.name}"></span></p>-->
+        <!--                    <img th:src="'https://openweathermap.org/img/wn/' + ${icon} + '@2x.png'"-->
+        <!--                         alt="Weather icon">-->
+        <!--&lt;!&ndash;                    <div class="weather-location">&ndash;&gt;-->
+        <!--&lt;!&ndash;                        <i th:text="'Weather in ' + ${weather.name}" class="fas fa-map-marker-alt"></i>&ndash;&gt;-->
+        <!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </section>-->
+
+        <!-- Events Section -->
+        <section class="activities-section">
+            <div class="activities-container">
+                <div class="events-today">
+                    <h3><i class="fas fa-calendar-day"></i> Events</h3>
+                    <small>Subscription for trainings is monthly</small>
+                    <div class="events-list" id="todayEvents" th:each="event : ${events}">
+                        <div class="event-item" data-type="reading" data-date="today">
+                            <div th:text="${#temporals.format(event.getStartTime(), 'hh:mm a')}" class="event-time">9:30
+                                AM
+                            </div>
+                            <div class="event-details">
+                                <h4>
+                                    <a th:href="@{'/events/' + ${event.id} + '/details'}"
+                                       th:text="${event.getTitle()}"></a>
+                                </h4>
+                                <p th:text="${event.getPeriodicity()}">type</p>
+                            </div>
+                            <div class="event-icon">
+                                <i th:if="${event.type.name() == 'EDUCATION'}" class="fas fa-book"></i>
+                                <i th:if="${event.type.name() == 'ART'}" class="fas fa-paintbrush"></i>
+                                <i th:if="${event.type.name() == 'SPORT'}" class="fas fa-futbol"></i>
+                                <i th:if="${event.type.name() == 'NATURE'}" class="fas fa-hiking"></i>
+                                <i th:if="${event.type.name() == 'FOOD'}" class="fas fa-blender"></i>
+                                <i th:if="${event.type.name() == 'INVENTION'}" class="fas fa-robot"></i>
+                            </div>
+                            <div th:if="${userData != null}">
+                                <a th:if="${!userEvents.contains(event)}"
+                                   th:href="@{'/events/' + ${event.id} + '/subscribe'}" class="subscribe-btn">
+                                    <i class="fas fa-plus"></i>
+                                    Subscribe
+                                </a>
+                                <a th:if="${userEvents.contains(event)}"
+                                   th:href="@{'/events/' + ${event.id} + '/unsubscribe'}" class="unsubscribe-btn">
+                                    <i class="fas fa-times"></i>
+                                    UnSubscribe
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clubs-today">
+                    <h3><i class="fas fa-calendar-day"></i> Clubs </h3>
+                    <div class="clubs-list" id="clubs" th:each="club : ${clubs}">
+                        <div class="club-item" data-type="reading" data-date="today">
+                            <div class="club-details">
+                                <h4>
+                                    <a th:href="@{'/clubs/' + ${club.id} + '/details'}" th:text="${club.name}"></a>
+                                </h4>
+                                <p th:text="${club.type}">type</p>
+                            </div>
+                            <div class="club-icon">
+                                <i th:if="${club.type.name() == 'EDUCATION'}" class="fas fa-book"></i>
+                                <i th:if="${club.type.name() == 'ART'}" class="fas fa-paintbrush"></i>
+                                <i th:if="${club.type.name() == 'SPORT'}" class="fas fa-futbol"></i>
+                                <i th:if="${club.type.name() == 'NATURE'}" class="fas fa-hiking"></i>
+                                <i th:if="${club.type.name() == 'FOOD'}" class="fas fa-blender"></i>
+                                <i th:if="${club.type.name() == 'INVENTION'}" class="fas fa-robot"></i>
+                            </div>
+                            <div th:if="${userData != null}">
+                                <a th:if="${!userClubs.contains(club)}" th:href="@{'/clubs/' + ${club.id} + '/join'}"
+                                   class="join-club-btn">
+                                    <i class="fas fa-user-plus"></i>
+                                    Join
+                                </a>
+                                <a th:if="${userClubs.contains(club)}" th:href="@{'/clubs/' + ${club.id} + '/leave'}"
+                                   class="leave-club-btn">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Leave
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<th:block th:insert="fragments/footer :: footer"></th:block>
+
+<script>
+    // Filter functionality
+    function applyFilters() {
+        const dateFilter = document.getElementById('dateFilter').value;
+        const typeFilter = document.getElementById('typeFilter').value;
+
+        const allEvents = document.querySelectorAll('.event-item, .event-card');
+
+        allEvents.forEach(event => {
+            const eventDate = event.getAttribute('data-date');
+            const eventType = event.getAttribute('data-type');
+
+            let showEvent = true;
+
+            // Date filter
+            if (dateFilter !== 'all') {
+                if (dateFilter === 'today' && eventDate !== 'today') showEvent = false;
+                if (dateFilter === 'tomorrow' && eventDate !== 'tomorrow') showEvent = false;
+                if (dateFilter === 'week' && eventDate !== 'week') showEvent = false;
+                if (dateFilter === 'month' && eventDate !== 'month') showEvent = false;
+            }
+
+            // Type filter
+            if (typeFilter !== 'all' && eventType !== typeFilter) {
+                showEvent = false;
+            }
+
+            event.style.display = showEvent ? 'flex' : 'none';
+        });
+    }
+
+    // Subscribe functionality
+    function subscribeToEvent(button, eventName) {
+        if (button.classList.contains('subscribed')) {
+            button.innerHTML = '<i class="fas fa-plus"></i> Subscribe';
+            button.classList.remove('subscribed');
+            showNotification(`Unsubscribed from ${eventName}`, 'info');
+        } else {
+            button.innerHTML = '<i class="fas fa-check"></i> Subscribed';
+            button.classList.add('subscribed');
+            showNotification(`Subscribed to ${eventName}!`, 'success');
+        }
+    }
+
+    // Notification system
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
+    }
+
+    // Modal functionality
+    function showModal(modalId) {
+        document.getElementById(modalId).style.display = 'block';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function (event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = 'none';
+        }
+    }
+
+    // Quick actions
+    function showAllEvents() {
+        // Reset filters
+        document.getElementById('dateFilter').value = 'all';
+        document.getElementById('typeFilter').value = 'all';
+        applyFilters();
+        showNotification('Showing all events', 'info');
+    }
+
+    function showMySubscriptions() {
+        const subscribedButtons = document.querySelectorAll('.subscribe-btn.subscribed');
+        if (subscribedButtons.length === 0) {
+            showNotification('You haven\'t subscribed to any events yet!', 'info');
+        } else {
+            showNotification(`You're subscribed to ${subscribedButtons.length} events`, 'success');
+        }
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function () {
+        // Animate cards on load
+        const cards = document.querySelectorAll('.event-item, .event-card, .club-item');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
+</body>
+</html>

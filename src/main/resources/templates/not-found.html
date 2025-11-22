@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Kids Portal</title>
+    <link rel="stylesheet" href="/css/error-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-star"></i>
+                <h1>Kids Portal</h1>
+            </div>
+            <nav class="nav">
+                <a th:href="@{/home}" class="btn btn-primary">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <a th:href="@{/login}" class="btn btn-secondary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Error Content -->
+            <section class="error-section">
+                <div class="error-card">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h2>Oops! Something went wrong</h2>
+                    <p class="error-message">We're sorry, but something unexpected happened.</p>
+                    <div class="error-code">
+                        <span class="code-number">404</span>
+                        <span class="code-text">Page Not Found</span>
+                    </div>
+                    <div class="error-actions">
+                        <a th:href="@{/home}" class="btn btn-primary">
+                            <i class="fas fa-home"></i>
+                            Go to Home
+                        </a>
+<!--                        <a href="javascript:history.back()" class="btn btn-secondary">-->
+<!--                            <i class="fas fa-arrow-left"></i>-->
+<!--                            Go Back-->
+<!--                        </a>-->
+                    </div>
+                    <div class="error-help">
+                        <p>If you believe this is an error, please contact support.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Kids Portal. Made with <i class="fas fa-heart"></i> for amazing kids!</p>
+        </div>
+    </footer>
+</body>
+</html>
+

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Kids Portal</title>
+    <link rel="stylesheet" href="profile-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<!-- Header -->
+<header class="portal-header">
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-star"></i>
+            <h1>Kids Portal</h1>
+        </div>
+        <nav class="top-nav">
+            <a href="index.html" class="nav-btn">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+            <a href="profile.html" class="nav-btn active">
+                <i class="fas fa-user"></i>
+                Profile
+            </a>
+            <a href="login.html" class="nav-btn">
+                <i class="fas fa-right-from-bracket"></i>
+                Logout
+            </a>
+        </nav>
+    </div>
+</header>
+
+<main class="portal-main">
+    <div class="container">
+        <div class="profile-layout">
+            <!-- Simple Profile Section -->
+            <section class="simple-profile">
+                <div class="profile-card">
+                    <div class="profile-header-simple">
+                        <h2><i class="fas fa-user"></i> My Profile</h2>
+                    </div>
+
+                    <div class="profile-content-simple">
+                        <!-- Profile Picture -->
+                        <div class="profile-picture-section">
+                            <div class="profile-avatar-container">
+                                <img src="https://tse1.mm.bing.net/th/id/OIP.tC6SxLdKREXMDKSYF1T2BgHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Profile Picture" id="profileImage" class="profile-avatar">
+                                <button class="edit-photo-btn" onclick="editProfilePicture()" title="Change Profile Picture">
+                                    <i class="fas fa-camera"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Profile Information -->
+                        <div class="profile-info-simple">
+                            <div class="info-item-simple">
+                                <label>ID:</label>
+                                <span id="userId" class="read-only">#12345</span>
+                            </div>
+
+                            <div class="info-item-simple">
+                                <label>Username:</label>
+                                <span id="userName" class="read-only">alex_johnson</span>
+                            </div>
+
+                            <div class="info-item-simple editable">
+                                <label>Location:</label>
+                                <select id="userLocation" class="editable-input">
+                                    <option value="New York, NY" selected>New York, NY</option>
+                                    <option value="California">California</option>
+                                    <option value="Texas">Texas</option>
+                                    <option value="Florida">Florida</option>
+                                    <option value="Illinois">Illinois</option>
+                                    <option value="Pennsylvania">Pennsylvania</option>
+                                    <option value="Ohio">Ohio</option>
+                                    <option value="Georgia">Georgia</option>
+                                    <option value="North Carolina">North Carolina</option>
+                                    <option value="Michigan">Michigan</option>
+                                </select>
+                            </div>
+
+                            <div class="info-item-simple editable">
+                                <label>Email:</label>
+                                <input type="email" id="userEmail" value="alex.johnson@email.com" class="editable-input" placeholder="Enter your email">
+                            </div>
+                        </div>
+
+                        <!-- Save Button -->
+                        <div class="profile-actions-simple">
+                            <button class="btn btn-primary" onclick="saveProfile()">
+                                <i class="fas fa-save"></i>
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="portal-footer">
+    <div class="container">
+        <p>&copy; 2024 Kids Portal. Made with <i class="fas fa-heart"></i> for amazing kids!</p>
+    </div>
+</footer>
+
+<!-- Edit Profile Modal -->
+<div id="editProfileModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('editProfileModal')">&times;</span>
+        <h2>Edit Profile</h2>
+        <form id="editProfileForm">
+            <div class="form-group">
+                <label for="editName">Full Name:</label>
+                <input type="text" id="editName" value="Alex Johnson" required>
+            </div>
+            <div class="form-group">
+                <label for="editEmail">Email:</label>
+                <input type="email" id="editEmail" value="alex.johnson@email.com" required>
+            </div>
+            <div class="form-group">
+                <label for="editPhone">Phone:</label>
+                <input type="tel" id="editPhone" value="+1 (555) 123-4567">
+            </div>
+            <div class="form-group">
+                <label for="editLocation">Location:</label>
+                <input type="text" id="editLocation" value="New York, NY" required>
+            </div>
+            <div class="form-group">
+                <label for="editSchool">School:</label>
+                <input type="text" id="editSchool" value="Sunshine Elementary School">
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('editProfileModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Profile picture functionality
+    function editProfilePicture() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                    showNotification('File size must be less than 5MB', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profileImage').src = e.target.result;
+                    showNotification('Profile picture updated!', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+        input.click();
+    }
+
+    // Save all changes
+    function saveProfile() {
+        const location = document.getElementById('userLocation').value;
+        const email = document.getElementById('userEmail').value;
+
+        // Validate email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            showNotification('Please enter a valid email address', 'error');
+            document.getElementById('userEmail').focus();
+            return;
+        }
+
+        // Save changes (simulate API call)
+        console.log('Saving profile:', { location, email });
+
+        showNotification('Profile saved successfully!', 'success');
+    }
+
+    // Cancel editing (not really needed anymore, but keeping for compatibility)
+    function cancelEdit() {
+        showNotification('Changes cancelled', 'info');
+    }
+
+    // Notification system
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate profile card
+        const profileCard = document.querySelector('.profile-card');
+        setTimeout(() => {
+            profileCard.style.opacity = '1';
+            profileCard.style.transform = 'translateY(0)';
+        }, 200);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users Management - Kids Portal</title>
+    <link rel="stylesheet" href="/css/users-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Open+Sans:wght@400;600;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<!-- Header -->
+<header class="portal-header">
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-star"></i>
+            <h1>Kids Portal</h1>
+        </div>
+        <nav class="top-nav">
+            <a th:href="@{/home}" class="nav-btn">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+            <a th:href="@{/logout}" class="nav-btn">
+                <i class="fas fa-right-from-bracket"></i>
+                Logout
+            </a>
+        </nav>
+    </div>
+</header>
+
+<main class="portal-main">
+    <div class="container">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h2><i class="fas fa-users"></i> Users Management</h2>
+            <p>Manage all registered users in the Kids Portal system</p>
+        </section>
+
+        <!-- Users Table -->
+        <section class="users-section">
+            <div class="users-card">
+                <div class="users-header">
+                    <h3><i class="fas fa-table"></i> All Users</h3>
+                    <div class="users-count">
+                        <span id="usersCount" th:text="${users.size() + ' users found'}">24 users found</span>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="users-table" id="usersTable">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Created On</th>
+                        </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                        <tr th:each="user : ${users}">
+                            <td class="user-id" th:text="${user.id}"></td>
+                            <td class="username">
+                                <div class="username-cell">
+                                    <span th:text="${user.username}"></span>
+                                </div>
+                            </td>
+                            <td class="email">
+                                <i class="fas fa-envelope"></i>
+                                <span th:text="${#strings.isEmpty(user.email) ? 'no email' : user.email}"></span>
+                            </td>
+                            <!--                                    <td class="role">-->
+                            <!--                                        <span th:if="${#strings.equals(user.role, 'USER')}" class="role-badge user" th:text="${#strings.capitalize(#strings.toLowerCase(user.role.getDisplayName()))}"></span>-->
+                            <!--                                        <span th:if="${#strings.equals(user.role, 'ADMIN')}" class="role-badge admin" th:text="${#strings.capitalize(#strings.toLowerCase(user.role.getDisplayName()))}"></span>-->
+                            <!--                                        <span th:if="${#strings.equals(user.role, 'TRAINER')}" class="role-badge trainer" th:text="${#strings.capitalize(#strings.toLowerCase(user.role.getDisplayName()))}"></span>-->
+                            <!--                                    </td>-->
+                            <td class="role">
+                                <form th:action="@{'/users/' + ${user.id} + '/role'}" th:method="put">
+                                    <div class="payment-status">
+                                        <button th:if="${#strings.equals(user.role, 'USER')}" class="role-badge user" type="submit" th:text="${user.role}">
+                                            <i class="fas fa-check-circle"></i>
+                                            <input type="hidden" name="role" th:value="${user.role}" />
+                                        </button>
+                                        <button th:if="${#strings.equals(user.role, 'ADMIN')}" class="role-badge admin" type="submit" th:text="${user.role}">
+                                            <i class="fas fa-check-circle"></i>
+                                            <input type="hidden" name="role" th:value="${user.role}" />
+                                        </button>
+                                        <button th:if="${#strings.equals(user.role, 'TRAINER')}" class="role-badge trainer" type="submit" th:text="${user.role}">
+                                            <i class="fas fa-check-circle"></i>
+                                            <input type="hidden" name="role" th:value="${user.role}" />
+                                        </button>
+                                    </div>
+                                </form>
+                            </td>
+                            <td class="location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span th:text="${#strings.capitalize(#strings.toLowerCase(user.location))}"></span>
+                            </td>
+                            <td class="status">
+<!--                                <span th:if="${user.isActive()}" class="status-badge active">Active</span>-->
+<!--                                <span th:unless="${user.isActive()}" class="status-badge inactive">Inactive</span>-->
+                                <form th:action="@{'/users/' + ${user.id} + '/status'}" th:method="patch">
+                                    <div class="payment-status">
+                                        <button th:if="${(user.isActive())}" class="status-badge active" type="submit" th:text="'ACTIVE'">
+                                            <i class="fas fa-check-circle"></i>
+                                            <input type="hidden" name="status" th:value="${user.isActive}" />
+                                        </button>
+                                        <button th:if="${!user.isActive()}" class="status-badge inactive" type="submit" th:text="'INACTIVE'">
+                                            <i class="fas fa-check-circle"></i>
+                                            <input type="hidden" name="status" th:value="${user.isActive}" />
+                                        </button>
+                                    </div>
+                                </form>
+                            </td>
+                            <form th:action="@{'/users/' + ${user.id} + '/role'}" th:method="patch">
+                                <div class="payment-status">
+                                    <button class="status-badge paid" type="submit">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span th:if="${user.role == 'USER'}" class="role-badge user"
+                                              th:text="${user.role}"></span>
+                                        <span th:if="${user.role == 'ADMIN'}" class="role-badge admin"
+                                              th:text="${user.role}"></span>
+                                        <span th:if="${user.role == 'TRAINER'}" class="role-badge trainer"
+                                              th:text="${user.role}"></span>
+                                    </button>
+                                </div>
+                            </form>
+                            <td class="created-date">
+                                <i class="fas fa-calendar"></i>
+                                <span th:text="${#temporals.format(user.createdOn, 'dd MMM YYYY HH:MM')}"></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+<!--    <th:block th:insert="fragments/footer :: footer"></th:block>-->
+<!-- Footer -->
+<!--    <footer class="portal-footer">-->
+<!--        <div class="container">-->
+<!--            <p>&copy; 2024 Kids Portal. Made with <i class="fas fa-heart"></i> for amazing kids!</p>-->
+<!--        </div>-->
+<!--    </footer>-->
+
+</body>
+</html>

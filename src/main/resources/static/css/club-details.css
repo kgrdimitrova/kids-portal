@@ -1,0 +1,65 @@
+/* === Club Details Page Styles === */
+
+.form-group input[disabled],
+.form-group select[disabled],
+.form-group textarea[disabled] {
+    background-color: #f9f9f9;
+    color: #777;
+    border-color: #ddd;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.form-group input:not([disabled]):hover,
+.form-group select:not([disabled]):hover,
+.form-group textarea:not([disabled]):hover {
+    border-color: #764ba2;
+    background-color: #fafaff;
+}
+
+.form-container {
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.form-group img {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e0e0e0;
+    transition: transform 0.2s ease;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.form-group img:hover {
+    transform: scale(1.02);
+}
+
+.view-mode-tag,
+.edit-mode-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.view-mode-tag {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4caf50;
+}
+
+.edit-mode-tag {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+}
+
+.error-message {
+    color: #f44336;
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+}
