@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>User Home - Kids Portal</title>
+    <link href="/css/home-styles.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Open+Sans:wght@400;600;700&display=swap"
+          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- Header -->
+<header class="portal-header">
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-star"></i>
+            <h1>Kids Portal</h1>
+        </div>
+        <nav class="top-nav">
+            <a class="nav-btn" th:href="@{/}">
+                <i class="fas fa-home"></i>
+                Index
+            </a>
+            <a class="nav-btn" th:href="@{/events/create-event}" th:if="${user != null}">
+                <i class="fas fa-right-from-bracket"></i>
+                Create Event
+            </a>
+            <a class="nav-btn" th:href="@{/clubs/create-club}" th:if="${user != null}">
+                <i class="fas fa-right-from-bracket"></i>
+                Create Club
+            </a>
+            <a class="nav-btn" th:href="@{/logout}">
+                <i class="fas fa-right-from-bracket"></i>
+                Logout
+            </a>
+        </nav>
+    </div>
+</header>
+
+<main class="portal-main">
+    <div class="container">
+        <div class="layout-grid">
+            <!-- Left Sidebar - Weather, Profile & Clubs -->
+            <aside class="left-sidebar">
+                <!-- Weather Card -->
+                <section class="card compact-weather">
+                    <div class="weather-row">
+                        <div>
+                            <div class="temp" th:text="${#numbers.formatDecimal(weather.main.temp, 0, 0) + '°C'}">°C
+                            </div>
+                            <div class="loc" th:text="${weather.weather[0].description}"></div>
+                            <div class="loc" th:text="${weather.wind.speed + ' m/s'}"></div>
+                            <div class="loc" th:text="${weather.name}">Varna</div>
+                            <img alt="Weather icon"
+                                 th:src="'https://openweathermap.org/img/wn/' + ${icon} + '@2x.png'">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Profile Card -->
+                <section class="card compact-profile">
+                    <div class="profile-header">
+                        <div class="profile-avatar-small">
+                            <img alt="Profile"
+                                 th:src="${#strings.isEmpty(user.profilePicture) ? 'https://tse1.mm.bing.net/th/id/OIP.tC6SxLdKREXMDKSYF1T2BgHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3' : user.profilePicture}"/>
+                            <span class="status-badge active" th:if="${user.isActive()}" title="Online"></span>
+                            <span class="status-badge inactive" th:if="${!user.isActive()}" title="Offline"></span>
+                        </div>
+                        <div class="profile-name-section">
+                            <h3 class="profile-name">Profile Name</h3>
+                            <span class="status-tag active" th:if="${user.isActive()}">Active</span>
+                            <span class="status-tag inactive" th:if="${!user.isActive()}">Inactive</span>
+                        </div>
+                    </div>
+                    <div class="profile-details">
+                        <p class="profile-detail" th:text="${user.username}"><i class="fas fa-user"></i>Username</p>
+                        <p class="profile-detail" th:text="${#strings.isEmpty(user.email) ? 'no email' : user.email}"><i
+                                class="fas fa-envelope"></i>Email</p>
+                        <p class="profile-detail" th:text="${user.location}"><i class="fas fa-map-marker-alt"></i>Location
+                        </p>
+                    </div>
+                    <div class="profile-actions-compact">
+                        <a class="btn-compact edit-btn" th:href="@{'/users/' + ${user.id} + '/profile'}">
+                            <i class="fas fa-pen"></i>
+                            Edit Profile
+                        </a>
+                        <button class="btn-compact message-btn">
+                            <i class="fas fa-message"></i>
+                            Message
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Clubs Card -->
+                <section class="card clubs">
+                    <h3><i class="fas fa-users"></i> Your Clubs</h3>
+                    <div class="clubs-grid" th:each="club : ${clubs}">
+                        <div class="club-item-compact">
+                            <div class="club-icon" style="--color:#ff6b6b"><i class="fas fa-rocket"></i></div>
+                            <div class="club-info">
+                                <h4 th:text="${club.getName()}">Science Explorers</h4>
+                                <span class="chip" th:text="${club.getType()}">Mon & Wed</span>
+                            </div>
+                            <a class="btn-compact edit-btn"
+                               th:href="@{'/clubs/' + ${club.id} + '/details'}" th:text="${user.id != club.creator.id} ? 'View Club' : 'Edit Club'">
+                                <i class="fas fa-pen"></i>
+                                View Club
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+
+            <!-- Events -->
+            <section class="main-content">
+                <section class="card activities-today">
+                    <h3><i class="fas fa-calendar-day"></i> User's Activities</h3>
+                    <div class="activity-grid" th:each="event : ${events}">
+                        <div class="activity-item-compact">
+                            <div class="activity-icon"><i class="fas fa-book"></i></div>
+                            <div class="activity-info">
+                                <div class="time">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <div class="time-content">
+                                        <span class="time-date"
+                                              th:text="${#temporals.format(event.startDate, 'EEEE, dd MMM')}"></span>
+                                        <span class="time-hour"
+                                              th:text="${#temporals.format(event.startTime, 'hh:mm a')}"></span>
+                                    </div>
+                                </div>
+                                <h4 th:text="${event.getTitle()}">Reading Club</h4>
+                                <p th:text="${event.getType()}">Chapter Adventures</p>
+                            </div>
+                            <a class="btn-compact edit-btn"
+                               th:href="@{'/events/' + ${event.id} + '/details'}" th:text="${user.id != event.creator.id} ? 'View Event' : 'Edit Event'">
+                                <i class="fas fa-pen"></i>
+                                View Event
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+        </div>
+    </div>
+</main>
+
+<th:block th:insert="fragments/footer :: footer"></th:block>
+
+<script>
+    // Simple placeholder: pretend to fetch profile, then animate cards in
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.card').forEach((card, i) => {
+            setTimeout(() => card.classList.add('show'), 80 * i);
+        });
+    });
+</script>
+</body>
+</html>
+
