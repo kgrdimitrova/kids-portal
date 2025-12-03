@@ -1,5 +1,6 @@
 package com.portal.kids.web;
 
+import com.portal.kids.exception.DatePeriodException;
 import com.portal.kids.exception.PaymentFailException;
 import com.portal.kids.exception.UserNotFoundException;
 import com.portal.kids.exception.UsernameAlreadyExistException;
@@ -17,11 +18,9 @@ public class GlobalControllerAdvice {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
-    public ModelAndView handleException(UserNotFoundException e) {
+    public String handleException() {
 
-        ModelAndView modelAndView = new ModelAndView("not-found");
-
-        return modelAndView;
+        return "not-found";
     }
 
     @ExceptionHandler(UsernameAlreadyExistException.class)
@@ -31,6 +30,13 @@ public class GlobalControllerAdvice {
         return "redirect:/register";
     }
 
+    @ExceptionHandler(DatePeriodException.class)
+    public String handleDatePeriodException(DatePeriodException e, RedirectAttributes redirectAttributes) {
+
+        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        return "redirect:/events/create-event";
+    }
+
     @ExceptionHandler(PaymentFailException.class)
     public String handleNotificationRetryFailedException(PaymentFailException e, RedirectAttributes redirectAttributes) {
 
@@ -38,22 +44,20 @@ public class GlobalControllerAdvice {
         return "redirect:/payments";
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
             NoResourceFoundException.class,
             AccessDeniedException.class
     })
-    public ModelAndView handleSpringException() {
+    public String handleSpringException() {
 
-        ModelAndView modelAndView = new ModelAndView("not-found");
-
-        return modelAndView;
+        return "internal-server-error";
     }
 
     @ExceptionHandler(Exception.class)
-    public ModelAndView handleLeftoverExceptions(Exception e) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleLeftoverExceptions() {
 
-        ModelAndView modelAndView = new ModelAndView("not-found");
-
-        return modelAndView;
+        return "internal-server-error";
     }
 }

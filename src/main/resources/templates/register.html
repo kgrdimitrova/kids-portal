@@ -104,20 +104,19 @@
                             <select id="reg-location" name="location" required th:field="*{location}">
                                 <option th:each="location : ${T(com.portal.kids.common.Location).values}" th:value="${location}" th:text="${location}"></option>
                             </select>
-                            </label>
                             <div class="input-icon">
                                 <i class="fas fa-map-marker-alt"></i>
                             </div>
                         </div>
 
-                        <div class="form-options">
-                            <label class="remember-me">
-                                <input type="checkbox" id="terms" required>
-                                <span class="checkmark"></span>
-                                I agree to the Terms & Privacy
-                            </label>
-                            <a th:href="@{/login}" class="signin-link">Already have an account?</a>
-                        </div>
+                        <!--                        <div class="form-options">-->
+                        <!--                            <label class="remember-me">-->
+                        <!--                                <input type="checkbox" id="terms" required>-->
+                        <!--                                <span class="checkmark"></span>-->
+                        <!--                                I agree to the Terms & Privacy-->
+                        <!--                            </label>-->
+                        <!--                            <a th:href="@{/login}" class="signin-link">Already have an account?</a>-->
+                        <!--                        </div>-->
 
 <!--                        <ul class="password-tips">-->
 <!--                            <li id="tip-length">At least 6 characters</li>-->

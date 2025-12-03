@@ -67,6 +67,11 @@ public class UserService implements UserDetailsService {
     @PreAuthorize("hasAuthority('VIEW_USERS')")
     public List<User> getAll() {
 
+        return getAllInternal();
+    }
+
+    // Internal method without security check for initialization
+    List<User> getAllInternal() {
         return userRepository.findAll();
     }
 
@@ -77,7 +82,7 @@ public class UserService implements UserDetailsService {
 
     public User getById(UUID id) {
 
-        return userRepository.findById(id).orElseThrow(()->new UserNotFoundException("User with [%s]] [%s] does not exists.".formatted("id", id)));
+        return userRepository.findById(id).orElseThrow(()->new UserNotFoundException("User with [%s] [%s] does not exists.".formatted("id", id)));
     }
 
     @CacheEvict(value = "users", allEntries = true)
@@ -91,6 +96,8 @@ public class UserService implements UserDetailsService {
         else {
             user.setRole(UserRole.USER);
         }
+        user.setUpdatedOn(LocalDateTime.now());
+
         userRepository.save(user);
     }
 
@@ -101,6 +108,8 @@ public class UserService implements UserDetailsService {
         User user = getById(userId);
 
         user.setActive(!user.isActive());
+
+        user.setUpdatedOn(LocalDateTime.now());
 
         userRepository.save(user);
     }

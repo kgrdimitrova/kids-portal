@@ -3,6 +3,7 @@ package com.portal.kids.web;
 import com.portal.kids.club.model.Club;
 import com.portal.kids.club.service.ClubService;
 import com.portal.kids.event.model.Event;
+import com.portal.kids.event.model.EventStatus;
 import com.portal.kids.event.service.EventService;
 import com.portal.kids.membership.service.UserClubService;
 import com.portal.kids.security.UserData;
@@ -41,6 +42,7 @@ public class ClubController {
 
     @GetMapping("/create-club")
     public ModelAndView createClubPage(){
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("clubRequest", new ClubRequest());
         modelAndView.setViewName("create-club");
@@ -62,7 +64,6 @@ public class ClubController {
         modelAndView.addObject("creator", club.getCreator());
 
         modelAndView.setViewName("update-club");
-        //modelAndView.setViewName("club-details");
         return modelAndView;
     }
 
@@ -80,13 +81,12 @@ public class ClubController {
 
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("update-club");
-            //modelAndView.setViewName("club-details");
             return modelAndView;
         }
 
         clubService.updateClub(id, clubRequest);
 
-        return new ModelAndView("redirect:/home");
+        return new ModelAndView("redirect:/");
     }
 
     @PostMapping("/create-club")
@@ -108,7 +108,7 @@ public class ClubController {
     @GetMapping("/{id}/join")
     public ModelAndView subscribeEvent(@AuthenticationPrincipal UserData userData, @PathVariable UUID id) {
 
-        if (userData.equals(null)) {
+        if (userData == null) {
             throw new RuntimeException("There is no user with the id " + id);
         }
 
@@ -136,14 +136,16 @@ public class ClubController {
 
         Club club  =  clubService.getById(id);
         User user = userService.getById(userData.getUserId());
-        List<Event> userEvents = userEventService.getUserEvents(user);
+        List<Event> userEvents = userEventService.getEventsByUser(user);
+        List<Event> clubEvents = eventService.getActiveEventsByClubId(EventStatus.ACTIVE, club.getId());
 
-        List<Event> clubEvents = eventService.getAllActiveEventsByClubId(club.getId());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("club", club);
         modelAndView.addObject("clubEvents", clubEvents);
         modelAndView.addObject("userEvents", userEvents);
+
         modelAndView.setViewName("club-schedule");
         return modelAndView;
+
     }
 }

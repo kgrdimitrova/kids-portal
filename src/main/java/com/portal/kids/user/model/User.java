@@ -16,6 +16,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -28,7 +29,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(unique = true)
+    //@Column(unique = true)
     private String email;
 
     @Enumerated(EnumType.STRING)

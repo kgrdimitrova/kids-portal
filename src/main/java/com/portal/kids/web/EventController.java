@@ -144,7 +144,7 @@ public class EventController {
     @GetMapping("/{id}/subscribe")
     public ModelAndView subscribeEvent(@AuthenticationPrincipal UserData userData, @PathVariable UUID id) {
 
-        if (userData.equals(null)) {
+        if (userData == null) {
             throw new RuntimeException("There is no user with the id " + id);
         }
 
@@ -173,7 +173,7 @@ public class EventController {
         ModelAndView modelAndView = new ModelAndView("user-payments");
 
         Event event = eventService.getById(id);
-        List<User> users = userEventService.getEventUsers(event);
+        List<User> users = userEventService.getUsersByEvent(event);
 
         List<PaymentResponse> payments = paymentService.getEventPayments(id);
 
@@ -185,7 +185,7 @@ public class EventController {
         modelAndView.addObject("paidPaymentsCount", PaymentUtils.getPaymentsCountByStatus(payments, PaymentStatus.PAID));
         modelAndView.addObject("cancelledPaymentsCount", PaymentUtils.getPaymentsCountByStatus(payments, PaymentStatus.CANCELLED));
         modelAndView.addObject("paymentsCount", PaymentUtils.getPaymentsCount(payments));
-        modelAndView.addObject("paymentsAmount", PaymentUtils.getPaymentsAmount(payments));
+        modelAndView.addObject("paymentsAmount", PaymentUtils.getPaymentsAmountByStatus(payments, PaymentStatus.PAID));
 
         return modelAndView;
     }

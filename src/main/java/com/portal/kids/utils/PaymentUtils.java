@@ -20,11 +20,11 @@ public class PaymentUtils {
         return payments.stream().filter(p -> p.getStatus().equals(status)).count();
     }
 
-    public static BigDecimal getPaymentsAmount(List<PaymentResponse> payments) {
-        return payments.stream().map(p -> p.getAmount()).reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
+    public static BigDecimal getPaymentsAmountByStatus(List<PaymentResponse> payments, PaymentStatus status) {
 
-//    public static BigDecimal getPaymentsAmountByStatus(List<PaymentResponse> payments, PaymentStatus status) {
-//        return payments.stream().filter(p -> p.getStatus().equals(status)).reduce(BigDecimal.ZERO, BigDecimal::add);
-//    }
+        return payments.stream()
+                .filter(p -> p.getStatus().equals(status))
+                .map(PaymentResponse::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

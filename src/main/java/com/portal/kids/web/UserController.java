@@ -5,6 +5,7 @@ import com.portal.kids.user.service.UserService;
 import com.portal.kids.web.dto.EditProfileRequest;
 import com.portal.kids.web.dto.mapper.DtoMapper;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -39,13 +40,17 @@ public class UserController {
     }
 
     @PutMapping("/{id}/profile")
-    public ModelAndView updateProfile(@Valid EditProfileRequest editProfileRequest, BindingResult bindingResult, @PathVariable UUID id) {
+    public ModelAndView updateProfile(@Valid EditProfileRequest editProfileRequest,
+                                      BindingResult bindingResult,
+                                      @PathVariable UUID id) {
 
         if (bindingResult.hasErrors()) {
             User user = userService.getById(id);
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("profile");
             modelAndView.addObject("user", user);
+            modelAndView.addObject("editProfileRequest", editProfileRequest); // also return form data
+            return modelAndView;
         }
 
         userService.updateProfile(id, editProfileRequest);
@@ -53,7 +58,8 @@ public class UserController {
         return new ModelAndView("redirect:/home");
     }
 
-    @GetMapping()
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ModelAndView getAllUsers() {
 
         List<User> users = userService.getAll();
@@ -67,6 +73,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}/role")
+    @PreAuthorize("hasRole('ADMIN')")
     public String switchUserRole(@PathVariable UUID userId) {
 
         userService.switchRole(userId);
@@ -74,6 +81,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}/status")
+    @PreAuthorize("hasRole('ADMIN')")
     public String switchUserStatus(@PathVariable UUID userId) {
 
         userService.switchStatus(userId);

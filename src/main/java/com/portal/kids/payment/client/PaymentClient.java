@@ -1,6 +1,5 @@
 package com.portal.kids.payment.client;
 
-import com.portal.kids.event.model.Event;
 import com.portal.kids.payment.client.dto.PaymentRequest;
 
 import com.portal.kids.payment.client.dto.PaymentResponse;
@@ -20,10 +19,10 @@ public interface PaymentClient {
     @PutMapping("/payments/{eventId}/{userId}/status")
     PaymentResponse updateStatus(@PathVariable UUID eventId, @PathVariable UUID userId);
 
-    @GetMapping("/payments")
+    @GetMapping("/payments/event/")
     ResponseEntity<List<PaymentResponse>>getPaymentsByEventId(@RequestParam("eventId") UUID eventId);
 
-    @GetMapping("/payments")
+    @GetMapping("/payments/user")
     ResponseEntity<List<PaymentResponse>>getPaymentsByUserId(@RequestParam("userId") UUID userId);
 
 //    @PostMapping("/payments")

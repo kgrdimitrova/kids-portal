@@ -26,7 +26,7 @@ public class TrainingGenerator {
     //@Scheduled(cron = "*/55 * * * * *")
     public void generateMonthlyTrainings() {
 
-      List<Event> trainings = eventService.getAllByStartAfterDateAndPeriodicity(LocalDate.now().minusWeeks(1), LocalDate.now(), EventPeriodicity.TRAINING);
+      List<Event> trainings = eventService.getAllByStartDateBetweenAndPeriodicity(LocalDate.now().minusWeeks(1), LocalDate.now(), EventPeriodicity.TRAINING);
                 trainings.forEach(training -> {
                 GenerateEvent newEvent = GenerateEvent.builder()
                 .eventId(training.getId())

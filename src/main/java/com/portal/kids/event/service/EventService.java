@@ -6,6 +6,7 @@ import com.portal.kids.event.driven.GenerateEvent;
 import com.portal.kids.event.driven.UpdateEvent;
 import com.portal.kids.event.model.*;
 import com.portal.kids.event.repository.EventRepository;
+import com.portal.kids.exception.DatePeriodException;
 import com.portal.kids.user.model.User;
 import com.portal.kids.web.dto.EventRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -33,9 +34,16 @@ public class EventService {
         this.eventPublisher = eventPublisher;
     }
 
-    public void createEvent(EventRequest eventRequest, User user) {
+    public Event createEvent(EventRequest eventRequest, User user) {
 
         Club club = eventRequest.getClubId() != null ? clubService.getById(eventRequest.getClubId()) : null;
+
+        LocalDateTime start = LocalDateTime.of(eventRequest.getStartDate(), eventRequest.getStartTime());
+        LocalDateTime end = LocalDateTime.of(eventRequest.getEndDate(), eventRequest.getEndTime());
+
+        if (!start.isBefore(end)) {
+            throw new DatePeriodException("Start date and time must be before end date and time.");
+        }
 
         Event event = Event.builder()
                 .title(eventRequest.getTitle())
@@ -56,6 +64,7 @@ public class EventService {
                 .build();
 
         eventRepository.save(event);
+        log.info("A event [{}] is created by [{}].", event.getTitle(), user.getUsername());
 
         if (event.getPeriodicity() == EventPeriodicity.TRAINING) {
             GenerateEvent generateEvent = GenerateEvent.builder()
@@ -66,26 +75,44 @@ public class EventService {
                     .build();
             eventPublisher.publishEvent(generateEvent);
         }
-        log.info("A event [{}] is created by [{}].", event.getTitle(), user.getUsername());
-    }
+        log.info("There will be generated periodic trainings till the end of the month for the event [{}].", event.getTitle());
 
-    public List<Event> getAllEventsByStartDate(LocalDate localDate) {
-        return eventRepository.findByStartDateAfter(localDate.minusDays(1));
-    }
-
-    public List<Event> getAllEvents() {
-        return eventRepository.findAll();
-    }
-
-    public Event getEventByTitleAndStartDateAndAgeCategory(String title, LocalDate startDate, AgeCategory ageCategory) {
-        return eventRepository.findByTitleAndStartDateAndAgeCategory(title, startDate, ageCategory);
+        return event;
     }
 
     public Event getById(UUID id) {
-        return eventRepository.findById(id).orElseThrow();
+
+        return eventRepository.findById(id).orElseThrow(() -> new RuntimeException("Event with such id [%s] does not exist.".formatted(id)));
     }
 
-    @PreAuthorize("@eventSecurity.isCreator(#eventId, authentication.principal.userId)")
+    public Event getEventByTitleAndStartDateAndAgeCategory(String title, LocalDate startDate, AgeCategory ageCategory) {
+
+        return eventRepository.findByTitleAndStartDateAndAgeCategory(title, startDate, ageCategory).orElseThrow(() -> new RuntimeException("Event with such name [%s] does not exist.".formatted(title)));
+    }
+
+    public List<Event> getAllEvents() {
+
+        return eventRepository.findAll();
+    }
+
+    public List<Event> getAllEventsByStartDate(LocalDate localDate) {
+
+        return eventRepository.findByStartDateAfter(localDate.minusDays(1));
+    }
+
+    public List<Event> getAllEventsByStartDateBefore(LocalDate startDate) {
+        return eventRepository.findByStartDateBefore(startDate);
+    }
+
+    public List<Event> getAllByStartDateBetweenAndPeriodicity(LocalDate startDate, LocalDate endDate, EventPeriodicity eventPeriodicity) {
+        return eventRepository.findAllByStartDateBetweenAndPeriodicity(startDate, endDate, eventPeriodicity);
+    }
+
+    public List<Event> getActiveEventsByClubId(EventStatus status, UUID clubId) {
+        return eventRepository.findEventByStatusAndClubId(status, clubId);
+    }
+
+    @PreAuthorize("@eventSecurity.isCreator(#id, authentication.principal.userId)")
     public void updateEvent(UUID id, EventRequest eventRequest) {
 
         Club club = null;
@@ -118,6 +145,16 @@ public class EventService {
                     .build();
             eventPublisher.publishEvent(updateEvent);
         }
+    }
+
+    @PreAuthorize("hasAuthority('EDIT_EVENT') and @eventSecurity.isCreator(#eventId, authentication.principal.userId)")
+    public void deactivateEvent(Event event) {
+        deactivateEventInternal(event);
+    }
+
+    public void deactivateEventInternal(Event event) {
+        event.setStatus(EventStatus.INACTIVE);
+        eventRepository.save(event);
     }
 
     @EventListener
@@ -159,22 +196,46 @@ public class EventService {
                 .build();
     }
 
-    public List<Event> getAllByStartAfterDateAndPeriodicity(LocalDate startDate, LocalDate endDate, EventPeriodicity eventPeriodicity) {
-        return eventRepository.findAllByStartDateBetweenAndPeriodicity(startDate, endDate, eventPeriodicity);
-    }
+    public void createEventInternal(EventRequest eventRequest, User user) {
+        Club club = eventRequest.getClubId() != null ? clubService.getById(eventRequest.getClubId()) : null;
 
-    public List<Event> getAllEventsByStartDateBefore(LocalDate startDate) {
-        return eventRepository.findByStartDateBefore(startDate);
-    }
+        LocalDateTime start = LocalDateTime.of(eventRequest.getStartDate(), eventRequest.getStartTime());
+        LocalDateTime end = LocalDateTime.of(eventRequest.getEndDate(), eventRequest.getEndTime());
 
-    @PreAuthorize("hasAuthority('EDIT_EVENT') and @eventSecurity.isCreator(#eventId, authentication.principal.userId)")
-    public void deactivateEvent(Event event) {
-        event.setStatus(EventStatus.INACTIVE);
+        if (!start.isBefore(end)) {
+            throw new DatePeriodException("Start date and time must be before end date and time.");
+        }
+
+        Event event = Event.builder()
+                .title(eventRequest.getTitle())
+                .startDate(eventRequest.getStartDate())
+                .endDate(eventRequest.getEndDate())
+                .startTime(eventRequest.getStartTime())
+                .endTime(eventRequest.getEndTime())
+                .location(eventRequest.getLocation())
+                .type(eventRequest.getType())
+                .periodicity(eventRequest.getPeriodicity())
+                .status(EventStatus.ACTIVE)
+                .pass(eventRequest.getPass())
+                .creator(user)
+                .createdOn(LocalDateTime.now())
+                .updatedOn(LocalDateTime.now())
+                .ageCategory(AgeCategory.ALL)
+                .club(club)
+                .build();
+
         eventRepository.save(event);
-    }
+        log.info("A event [{}] is created by [{}].", event.getTitle(), user.getUsername());
 
-    @PreAuthorize("hasAuthority('DELETE_EVENT') and @eventSecurity.isCreator(#eventId, authentication.principal.userId)")
-    public List<Event> getAllActiveEventsByClubId(UUID clubId) {
-        return eventRepository.findAllActiveEventsByClubId(clubId);
+        if (event.getPeriodicity() == EventPeriodicity.TRAINING) {
+            GenerateEvent generateEvent = GenerateEvent.builder()
+                    .eventId(event.getId())
+                    .startDate(event.getStartDate())
+                    .status(EventStatus.ACTIVE)
+                    .createdOn(LocalDate.now())
+                    .build();
+            eventPublisher.publishEvent(generateEvent);
+        }
+        log.info("There will be generated periodic trainings till the end of the month for the event [{}].", event.getTitle());
     }
 }

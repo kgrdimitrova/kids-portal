@@ -85,7 +85,7 @@
                     <!-- Date & Time -->
                     <div class="form-section">
                         <h3><i class="fas fa-calendar-alt"></i> Date & Time</h3>
-
+                        <p class="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></p>
                         <div class="form-row compact-datetime">
                             <div class="form-group">
                                 <label for="startDate">Start Date *</label>
@@ -104,13 +104,6 @@
                                 <input type="time" id="endTime" name="endTime" required th:field="*{endTime}">
                             </div>
                         </div>
-
-                        <!--                            <div class="form-group">-->
-                        <!--                                <label for="eventPeriodicity">Periodicity</label>-->
-                        <!--                                <select id="eventPeriodicity" name="periodicity" required th:field="*{periodicity}">-->
-                        <!--                                    <option th:each="periodicity : ${T(com.portal.kids.event.model.EventPeriodicity).values}" th:value="${periodicity}" th:text="${periodicity}"></option>-->
-                        <!--                                </select>-->
-                        <!--                            </div>-->
                         <div class="form-group">
                             <label for="eventPeriodicity">Periodicity</label>
                             <div class="periodicity-container">
@@ -152,9 +145,9 @@
                             <label for="eventPicture">Picture</label>
 
                             <!-- Preview the current or fallback image -->
-                            <img
-                                    alt="Event picture"
-                                    style="max-width: 200px; border-radius: 8px; display: block; margin-bottom: 8px;">
+                            <!--                            <img-->
+                            <!--                                    alt="Event picture"-->
+                            <!--                                    style="max-width: 200px; border-radius: 8px; display: block; margin-bottom: 8px;">-->
 
                             <!-- Allow manual update of the picture URL -->
                             <input type="text"
@@ -181,6 +174,14 @@
                                             th:value="${ageCategory}" th:text="${ageCategory}"></option>
                                 </select>
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventPayment">Payment Amount</label>
+                            <input id="eventPayment" min="0" name="paymentAmount" placeholder="e.g., 50.00"
+                                   step="0.01" th:field="*{pass}" type="number">
+                            <small class="text-muted">Enter the payment amount for this event (leave empty if
+                                free)</small>
                         </div>
 
                         <div class="form-group">

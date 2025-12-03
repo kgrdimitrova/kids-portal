@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.validator.constraints.URL;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.*;
 
 @Builder
@@ -40,17 +40,14 @@ public class Club {
     private User creator;
 
     @Column(nullable = false)
-    private LocalDateTime createdOn;
+    private LocalDate createdOn;
 
     @Column(nullable = false)
-    private LocalDateTime updatedOn;
+    private LocalDate updatedOn;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ActivityType type;
-
-//    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
-//    List<User> trainers;
 
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserClub> userClubs = new ArrayList<>();

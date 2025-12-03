@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -19,18 +20,34 @@ public class ClubService {
     private final ClubRepository clubRepository;
 
     public ClubService(ClubRepository clubRepository) {
+
         this.clubRepository = clubRepository;
     }
 
-    @PreAuthorize("hasAuthority('CREATE_CLUB') and @clubSecurity.isCreator(#clubId, authentication.principal.userId)")
+    public Club getById(UUID id) {
+
+        return clubRepository.findById(id).orElseThrow(() -> new RuntimeException("Club with id [%s] does not exist.".formatted(id)));
+    }
+
+    public Club getClubByName(String name) {
+
+        return clubRepository.findByName(name).orElseThrow(() -> new RuntimeException("Club with name [%s] does not exist.".formatted(name)));
+    }
+
+    public List<Club> getAllClubs() {
+
+        return clubRepository.findAll();
+    }
+
+    @PreAuthorize("hasAuthority('CREATE_CLUB')")
     public void createClub(ClubRequest createClubRequest, User user) {
         Club club = Club.builder()
                 .name(createClubRequest.getName())
                 .description(createClubRequest.getDescription())
                 .location(createClubRequest.getLocation())
                 .type(createClubRequest.getType())
-                .createdOn(LocalDateTime.now())
-                .updatedOn(LocalDateTime.now())
+                .createdOn(LocalDate.now())
+                .updatedOn(LocalDate.now())
                 .creator(user)
                 .build();
 
@@ -38,19 +55,7 @@ public class ClubService {
         log.info("A club [{}] is created by the user [{}]", club.getName(), user.getUsername());
     }
 
-    public List<Club> getAllClubs() {
-        return clubRepository.findAll();
-    }
-
-    public Club getClubByName(String name) {
-        return clubRepository.findByName(name);
-    }
-
-    public Club getById(UUID id) {
-        return clubRepository.findById(id).orElseThrow(()->new RuntimeException("Club with username [%s] does not exists.".formatted(id)));
-    }
-
-    @PreAuthorize("hasAuthority('EDIT_CLUB') and @clubSecurity.isCreator(#clubId, authentication.principal.userId)")
+    @PreAuthorize("hasAuthority('EDIT_CLUB') and @clubSecurity.isCreator(#id, authentication.principal.userId)")
     public void updateClub(UUID id, ClubRequest clubRequest) {
 
         Club club = getById(id);
@@ -59,7 +64,25 @@ public class ClubService {
         club.setLocation(clubRequest.getLocation());
         club.setType(clubRequest.getType());
         club.setPicture(clubRequest.getPicture());
-        club.setUpdatedOn(LocalDateTime.now());
+        club.setUpdatedOn(LocalDate.now());
+
         clubRepository.save(club);
+        log.info("The club [{}] is updated on %s", club.getName(), LocalDateTime.now());
+    }
+
+    public void createClubInternal(ClubRequest createClubRequest, User user) {
+        Club club = Club.builder()
+                .name(createClubRequest.getName())
+                .description(createClubRequest.getDescription())
+                .location(createClubRequest.getLocation())
+                .type(createClubRequest.getType())
+                .createdOn(LocalDate.now())
+                .updatedOn(LocalDate.now())
+                .creator(user)
+                .build();
+
+        clubRepository.save(club);
+        log.info("A club [{}] is created by the user [{}]", club.getName(), user.getUsername());
+
     }
 }

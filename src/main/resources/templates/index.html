@@ -86,8 +86,14 @@
                     <small>Subscription for trainings is monthly</small>
                     <div class="events-list" id="todayEvents" th:each="event : ${events}">
                         <div class="event-item" data-type="reading" data-date="today">
-                            <div th:text="${#temporals.format(event.getStartTime(), 'hh:mm a')}" class="event-time">9:30
-                                AM
+                            <div class="event-time">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div class="time-content">
+                                    <span class="time-date"
+                                          th:text="${#temporals.format(event.startDate, 'EEEE, dd MMM')}"></span>
+                                    <span class="time-hour"
+                                          th:text="${#temporals.format(event.startTime, 'hh:mm a')}"></span>
+                                </div>
                             </div>
                             <div class="event-details">
                                 <h4>

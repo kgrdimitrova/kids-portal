@@ -15,13 +15,14 @@ import com.portal.kids.user.repository.UserRepository;
 import com.portal.kids.web.dto.ClubRequest;
 import com.portal.kids.web.dto.EventRequest;
 import com.portal.kids.web.dto.RegisterRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @Component
 public class UserInit implements ApplicationRunner {
 
@@ -48,9 +49,12 @@ public class UserInit implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
+        initializeDefaultData();
+    }
 
-        List<User> users = userService.getAll();
+    private void initializeDefaultData() {
+        List<User> users = userService.getAllInternal();
 
         boolean defaultUserDoesNotExist = users.stream().noneMatch(user -> user.getUsername().equals(userProperties.getDefaultUser().getUsername()));
 
@@ -79,7 +83,8 @@ public class UserInit implements ApplicationRunner {
                     .type(clubProperties.getDefaultClub().getType())
                     .build();
 
-            clubService.createClub(createClubRequest, createdUser);
+            // Use internal method without security checks for initialization
+            clubService.createClubInternal(createClubRequest, createdUser);
         }
 
         Club createdClub = clubService.getClubByName(clubProperties.getDefaultClub().getName());
@@ -109,17 +114,29 @@ public class UserInit implements ApplicationRunner {
                     .clubId(createdClub.getId())
                     .build();
 
-            eventService.createEvent(createEventRequest, userService.getByUsername(userProperties.getDefaultUser().getUsername()));
+            // Use internal method without security checks for initialization
+            eventService.createEventInternal(createEventRequest, createdUser);
         }
 
-        Event createdEvent = eventService.getEventByTitleAndStartDateAndAgeCategory(eventProperties.getDefaultEvent().getTitle(), eventProperties.getDefaultEvent().getStartDate().toLocalDate(), eventProperties.getDefaultEvent().getAgeCategory());
+        try {
+            Event createdEvent = eventService.getEventByTitleAndStartDateAndAgeCategory(
+                    eventProperties.getDefaultEvent().getTitle(),
+                    eventProperties.getDefaultEvent().getStartDate().toLocalDate(),
+                    eventProperties.getDefaultEvent().getAgeCategory()
+            );
 
-        List<Event> userEvents = userEventService.getUserEvents(createdUser);
-        boolean defaultUserEventDoesNotExist = userEvents.stream().noneMatch(event -> event.getTitle().equals(eventProperties.getDefaultEvent().getTitle()));
+            List<Event> userEvents = userEventService.getEventsByUser(createdUser);
+            boolean defaultUserEventDoesNotExist = userEvents.stream()
+                    .noneMatch(event -> event.getTitle().equals(eventProperties.getDefaultEvent().getTitle()));
 
-        if (defaultUserEventDoesNotExist) {
-            userEventService.subscribeUserToEvent(createdUser.getId(), createdEvent.getId());
+            if (defaultUserEventDoesNotExist) {
+                userEventService.subscribeUserToEvent(createdUser.getId(), createdEvent.getId());
+            }
+        } catch (Exception e) {
+            log.info("Event with title [{}], start date [{}] and category [{}] does not exist.",
+                    eventProperties.getDefaultEvent().getTitle(),
+                    eventProperties.getDefaultEvent().getStartDate().toLocalDate(),
+                    eventProperties.getDefaultEvent().getAgeCategory());
         }
     }
 }
-

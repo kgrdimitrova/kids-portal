@@ -9,6 +9,7 @@ import com.portal.kids.security.UserData;
 import com.portal.kids.subscription.service.UserEventService;
 import com.portal.kids.user.model.User;
 import com.portal.kids.user.service.UserService;
+import com.portal.kids.utils.WeatherUtils;
 import com.portal.kids.weather.client.dto.WeatherResponse;
 import com.portal.kids.weather.service.WeatherService;
 import com.portal.kids.web.dto.LoginRequest;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class IndexController {
@@ -51,11 +53,14 @@ public class IndexController {
 
         if (userData != null) {
             User user = userService.getById(userData.getUserId());
-            List<Event> userEvents = userEventService.getUserEvents(user);
+            List<Event> userEvents = userEventService.getEventsByUser(user);
             List<Club> userClubs = userClubService.getUserClubs(user);
             modelAndView.addObject("user", user);
             modelAndView.addObject("userEvents", userEvents);
             modelAndView.addObject("userClubs", userClubs);
+        } else {
+            modelAndView.addObject("weather", null);
+            modelAndView.addObject("icon", "img.png");
         }
 
         List<Event> events = eventService.getAllEventsByStartDate(LocalDate.now());
@@ -116,7 +121,8 @@ public class IndexController {
         User user = userService.getById(userData.getUserId());
 
         WeatherResponse weather = weatherService.getWeather(String.valueOf(user.getLocation()));
-        List<Event> events = userEventService.getUserEvents(user);
+
+        List<Event> events = userEventService.getEventsByUser(user);
         List<Club> clubs = userClubService.getUserClubs(user);
 
         ModelAndView modelAndView = new ModelAndView();
@@ -124,7 +130,7 @@ public class IndexController {
         modelAndView.addObject("events", events);
         modelAndView.addObject("clubs", clubs);
         modelAndView.addObject("weather", weather);
-        modelAndView.addObject("icon", weather.getWeather().get(0).getIcon());
+        modelAndView.addObject("icon", WeatherUtils.extractIcon(weather));
         modelAndView.setViewName("home");
 
         return modelAndView;

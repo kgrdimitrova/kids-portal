@@ -43,7 +43,7 @@
                 <!-- Left Sidebar - Weather, Profile & Clubs -->
                 <aside class="left-sidebar">
                     <!-- Weather Card -->
-                    <section class="card compact-weather">
+                    <section class="card compact-weather" th:if="${weather != null and weather.main != null}">
                         <div class="weather-row">
                             <div>
                                 <div class="temp" th:text="${#numbers.formatDecimal(weather.main.temp, 0, 0) + '°C'}">°C</div>
@@ -107,16 +107,23 @@
                     </section>
                 </aside>
 
-                <!-- Main Content Area -->
+                <!-- Events -->
                 <section class="main-content">
-                    <!-- Today's Activities -->
                     <section class="card activities-today">
                         <h3><i class="fas fa-calendar-day"></i> User's Activities</h3>
                         <div  th:each="event : ${events}" class="activity-grid">
                             <div class="activity-item-compact">
                                 <div class="activity-icon"><i class="fas fa-book"></i></div>
                                 <div class="activity-info">
-                                    <div th:text="${#temporals.format(event.getStartTime(), 'hh:mm a')}" class="time">9:30 AM</div>
+                                    <div class="time">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <div class="time-content">
+                                            <span class="time-date"
+                                                  th:text="${#temporals.format(event.startDate, 'EEEE, dd MMM')}"></span>
+                                            <span class="time-hour"
+                                                  th:text="${#temporals.format(event.startTime, 'hh:mm a')}"></span>
+                                        </div>
+                                    </div>
                                     <h4 th:text="${event.getTitle()}">Reading Club</h4>
                                     <p th:text="${event.getType()}">Chapter Adventures</p>
                                 </div>

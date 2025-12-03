@@ -1,25 +1,21 @@
 package com.portal.kids.subscription.service;
 
 import com.portal.kids.event.model.Event;
-import com.portal.kids.event.model.EventPeriodicity;
-import com.portal.kids.event.repository.EventRepository;
+import com.portal.kids.event.model.EventStatus;
 import com.portal.kids.event.service.EventService;
 import com.portal.kids.payment.client.dto.PaymentStatus;
 import com.portal.kids.payment.client.dto.PaymentType;
 import com.portal.kids.payment.service.PaymentService;
-import com.portal.kids.subscription.model.Status;
 import com.portal.kids.subscription.model.UserEvent;
 import com.portal.kids.subscription.model.UserEventId;
 import com.portal.kids.subscription.repository.UserEventRepository;
 import com.portal.kids.user.model.User;
-import com.portal.kids.user.repository.UserRepository;
+import com.portal.kids.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,33 +25,28 @@ import java.util.UUID;
 public class UserEventService {
 
     private final UserEventRepository userEventRepository;
-    private final UserRepository userRepository;
-    private final EventRepository eventRepository;
-    private final PaymentService paymentService;
     private final EventService eventService;
+    private final PaymentService paymentService;
+    private final UserService userService;
 
     @Transactional
     public UserEvent subscribeUserToEvent(UUID userId, UUID eventId) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+        User user = userService.getById(userId);
 
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new IllegalArgumentException("Event not found: " + eventId));
+        Event event = eventService.getById(eventId);
 
-        // Check if already subscribed
         Optional<UserEvent> existing = userEventRepository.findByUserAndEvent(user, event);
         if (existing.isPresent()) {
-            throw new IllegalStateException("User already subscribed to this event");
+            throw new RuntimeException("User [%s] is already subscribed to this event [%s]".formatted(user.getUsername(), event.getTitle()));
         }
 
-        // Create the link
         UserEvent userEvent = UserEvent.builder()
                 .id(new UserEventId(user.getId(), event.getId()))
                 .user(user)
                 .event(event)
                 .subscribedOn(LocalDateTime.now())
-                .status(Status.ACTIVE)
+                .status(EventStatus.ACTIVE)
                 .build();
 
         userEventRepository.save(userEvent);
@@ -68,15 +59,24 @@ public class UserEventService {
     public void unsubscribeUserFromEvent(UUID userId, UUID eventId) {
 
         Event event = eventService.getById(eventId);
-        userEventRepository.deleteByUserIdAndEventId(userId, eventId);
+        UserEvent userEvent = getUserEvent(userService.getById(userId), event);
+        userEventRepository.deleteById(userEvent.getId());
         paymentService.upsertPayment(userId, eventId, PaymentStatus.CANCELLED,  PaymentType.SINGLE, event.getPass());
     }
 
-    public List<Event> getUserEvents(User user) {
+    public List<Event> getEventsByUser(User user) {
         return userEventRepository.findEventsByUserOrderByStartDateDESC(user);
     }
 
-    public List<User> getEventUsers(Event event) {
+    public List<UserEvent> getUserEvents(User user) {
+        return userEventRepository.findUserEventsByUser(user);
+    }
+
+    public List<User> getUsersByEvent(Event event) {
         return userEventRepository.findUsersByEvent(event);
+    }
+
+    public UserEvent getUserEvent(User user, Event event) {
+        return userEventRepository.findByUserAndEvent(user, event).orElseThrow(()->new RuntimeException("User [%s] is not subscribed to this event [%s]".formatted(user.getUsername(), event.getTitle())));
     }
 }

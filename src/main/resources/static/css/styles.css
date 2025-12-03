@@ -460,16 +460,56 @@ body {
 }
 
 .event-time {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 140px;
+}
+
+.event-time i {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.event-time .time-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.event-time .time-date {
     font-weight: 600;
     color: #ff6b6b;
-    min-width: 80px;
+    font-size: 0.75rem;
+    text-transform: capitalize;
+    line-height: 1.2;
+}
+
+.event-time .time-hour {
+    font-weight: 700;
+    color: #ff6b6b;
     font-size: 0.9rem;
+    letter-spacing: 0.5px;
 }
 
 .event-item.compact .event-time {
+    min-width: 120px;
+}
+
+.event-item.compact .event-time i {
     color: #4ecdc4;
-    min-width: 70px;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+}
+
+.event-item.compact .event-time .time-date {
+    color: #4ecdc4;
+    font-size: 0.7rem;
+}
+
+.event-item.compact .event-time .time-hour {
+    color: #4ecdc4;
+    font-size: 0.85rem;
 }
 
 .event-details, .club-details {
