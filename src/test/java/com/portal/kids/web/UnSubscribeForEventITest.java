@@ -2,13 +2,11 @@ package com.portal.kids.web;
 
 import com.portal.kids.common.ActivityType;
 import com.portal.kids.common.Location;
-import com.portal.kids.email.EmailService;
 import com.portal.kids.event.model.AgeCategory;
 import com.portal.kids.event.model.Event;
 import com.portal.kids.event.model.EventPeriodicity;
 import com.portal.kids.event.service.EventService;
 import com.portal.kids.subscription.model.UserEvent;
-import com.portal.kids.subscription.repository.UserEventRepository;
 import com.portal.kids.subscription.service.UserEventService;
 import com.portal.kids.user.model.User;
 import com.portal.kids.user.service.UserService;

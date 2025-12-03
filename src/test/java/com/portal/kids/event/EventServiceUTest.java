@@ -5,25 +5,32 @@ import com.portal.kids.common.ActivityType;
 import com.portal.kids.common.Location;
 import com.portal.kids.event.driven.GenerateEvent;
 import com.portal.kids.event.driven.UpdateEvent;
-import com.portal.kids.event.model.*;
+import com.portal.kids.event.model.Event;
+import com.portal.kids.event.model.EventPeriodicity;
+import com.portal.kids.event.model.EventStatus;
 import com.portal.kids.event.repository.EventRepository;
 import com.portal.kids.event.service.EventService;
 import com.portal.kids.exception.DatePeriodException;
 import com.portal.kids.user.model.User;
 import com.portal.kids.web.dto.EventRequest;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.Optional;
+import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class EventServiceUTest {
 
     @Mock
@@ -31,6 +38,9 @@ class EventServiceUTest {
 
     @Mock
     private ApplicationEventPublisher eventPublisher;
+
+    @Mock
+    private ClubService clubService; // if EventService depends on it
 
     @InjectMocks
     private EventService eventService;
@@ -46,7 +56,6 @@ class EventServiceUTest {
 
     @Test
     void createEvent_shouldSaveEvent() {
-
         EventRequest request = new EventRequest();
         request.setTitle("Football");
         request.setStartDate(LocalDate.now().plusDays(1));
@@ -69,7 +78,6 @@ class EventServiceUTest {
 
     @Test
     void createEvent_whenPeriodicityTraining_shouldPublishEvent() {
-
         EventRequest request = new EventRequest();
         request.setTitle("Training");
         request.setStartDate(LocalDate.now().plusDays(1));
@@ -90,7 +98,6 @@ class EventServiceUTest {
 
     @Test
     void createEvent_whenStartAfterEnd_shouldThrow() {
-
         EventRequest request = new EventRequest();
         request.setTitle("Invalid");
         request.setStartDate(LocalDate.now().plusDays(2));
@@ -104,7 +111,6 @@ class EventServiceUTest {
 
     @Test
     void getById_shouldReturnEvent() {
-
         UUID id = UUID.randomUUID();
         Event event = new Event();
         event.setId(id);
@@ -118,7 +124,6 @@ class EventServiceUTest {
 
     @Test
     void getById_whenNotFound_shouldThrow() {
-
         UUID id = UUID.randomUUID();
         when(eventRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -128,7 +133,6 @@ class EventServiceUTest {
 
     @Test
     void updateEvent_shouldUpdateAndPublishWhenTraining() {
-
         UUID eventId = UUID.randomUUID();
 
         Event existing = new Event();
@@ -150,7 +154,6 @@ class EventServiceUTest {
 
     @Test
     void updateEvent_whenNotTraining_shouldNotPublish() {
-
         UUID eventId = UUID.randomUUID();
 
         Event existing = new Event();
@@ -170,7 +173,6 @@ class EventServiceUTest {
 
     @Test
     void deactivateEventInternal_shouldSetInactive() {
-
         Event event = new Event();
         event.setStatus(EventStatus.ACTIVE);
 
@@ -182,7 +184,6 @@ class EventServiceUTest {
 
     @Test
     void generateEvents_shouldGenerateWeeklyEvents() {
-
         UUID id = UUID.randomUUID();
 
         Event initial = new Event();
@@ -207,4 +208,3 @@ class EventServiceUTest {
         verify(eventRepository, atLeastOnce()).save(any(Event.class));
     }
 }
-

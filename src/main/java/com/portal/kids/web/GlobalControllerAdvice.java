@@ -9,7 +9,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -51,7 +50,7 @@ public class GlobalControllerAdvice {
     })
     public String handleSpringException() {
 
-        return "internal-server-error";
+        return "not-found";
     }
 
     @ExceptionHandler(Exception.class)

@@ -14,6 +14,7 @@ import com.portal.kids.user.model.User;
 import com.portal.kids.user.service.UserService;
 import com.portal.kids.web.dto.EventRequest;
 import com.portal.kids.web.dto.RegisterRequest;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,6 +35,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("test")
 @SpringBootTest
+@Transactional
 public class SubscribeForEventITest {
 
     @Autowired
