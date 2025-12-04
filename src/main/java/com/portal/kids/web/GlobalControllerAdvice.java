@@ -1,9 +1,6 @@
 package com.portal.kids.web;
 
-import com.portal.kids.exception.DatePeriodException;
-import com.portal.kids.exception.PaymentFailException;
-import com.portal.kids.exception.UserNotFoundException;
-import com.portal.kids.exception.UsernameAlreadyExistException;
+import com.portal.kids.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,6 +17,13 @@ public class GlobalControllerAdvice {
     public String handleException() {
 
         return "not-found";
+    }
+
+    @ExceptionHandler(InvalidUserException.class)
+    public String handleInvalidUserException(InvalidUserException e, RedirectAttributes redirectAttributes) {
+
+        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        return "redirect:/register";
     }
 
     @ExceptionHandler(UsernameAlreadyExistException.class)

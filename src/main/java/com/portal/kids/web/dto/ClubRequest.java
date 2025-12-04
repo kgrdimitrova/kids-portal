@@ -28,9 +28,9 @@ public class ClubRequest {
     @NotNull
     private Location location;
 
+    @URL
+    private String imageUrl;
+
     @NotNull
     private ActivityType type;
-
-    @URL
-    private String picture;
 }

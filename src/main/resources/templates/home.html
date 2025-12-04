@@ -21,11 +21,16 @@
                     <i class="fas fa-home"></i>
                     Index
                 </a>
+                <a class="nav-btn" th:href="@{/users}" th:if="${user != null and user.role.name() == 'ADMIN'}">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Users
+                </a>
                 <a th:if="${user != null}" th:href="@{/events/create-event}" class="nav-btn">
                     <i class="fas fa-right-from-bracket"></i>
                     Create Event
                 </a>
-                <a th:if="${user != null}" th:href="@{/clubs/create-club}" class="nav-btn">
+                <a class="nav-btn" th:href="@{/clubs/create-club}"
+                   th:if="${user != null and user.role.name() == 'TRAINER'}">
                     <i class="fas fa-right-from-bracket"></i>
                     Create Club
                 </a>
@@ -81,10 +86,10 @@
                                 <i class="fas fa-pen"></i>
                                 Edit Profile
                             </a>
-                            <button class="btn-compact message-btn">
-                                <i class="fas fa-message"></i>
-                                Message
-                            </button>
+                            <!--                            <button class="btn-compact message-btn">-->
+                            <!--                                <i class="fas fa-message"></i>-->
+                            <!--                                Message-->
+                            <!--                            </button>-->
                         </div>
                     </section>
 

@@ -3,9 +3,9 @@ package com.portal.kids.web;
 import com.portal.kids.club.model.Club;
 import com.portal.kids.club.service.ClubService;
 import com.portal.kids.common.Location;
+import com.portal.kids.common.Status;
 import com.portal.kids.event.model.AgeCategory;
 import com.portal.kids.event.model.Event;
-import com.portal.kids.event.model.EventStatus;
 import com.portal.kids.event.service.EventService;
 import com.portal.kids.membership.model.UserClub;
 import com.portal.kids.membership.service.UserClubService;
@@ -34,7 +34,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -162,7 +161,7 @@ public class IndexControllerApiTest {
         Event event = Event.builder()
                 .id(UUID.randomUUID())
                 .startDate(LocalDate.of(2025, 12, 20))
-                .status(EventStatus.ACTIVE)
+                .status(Status.ACTIVE)
                 .ageCategory(AgeCategory.ALL)
                 .title("Event1")
                 .createdOn(LocalDateTime.now())
@@ -175,7 +174,7 @@ public class IndexControllerApiTest {
                 .build();
 
         user.setUserClubs(List.of(UserClub.builder().club(club).user(user).joinedAt(LocalDateTime.now()).build()));
-        user.setUserEvents(List.of(UserEvent.builder().event(event).user(user).status(EventStatus.ACTIVE).subscribedOn(LocalDateTime.now()).build()));
+        user.setUserEvents(List.of(UserEvent.builder().event(event).user(user).status(Status.ACTIVE).subscribedOn(LocalDateTime.now()).build()));
 
         return user;
     }

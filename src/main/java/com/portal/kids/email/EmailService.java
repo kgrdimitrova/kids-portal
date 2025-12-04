@@ -43,6 +43,7 @@ public class EmailService {
             mailMessage.setText("Event [%s] at [%s] has been updated.\n".formatted(updatedEvent.getTitle(), updatedEvent.getStartDate()));
             try {
                 mailSender.send(mailMessage);
+                log.info("Mail sent to %s, email: %s".formatted(user.getUsername(), user.getEmail()));
             } catch (MailException e) {
                 log.error("Failed to send mail to %s, email: %s due to %s.".formatted(user.getUsername(), user.getEmail(), e.getMessage()));
             }

@@ -1,7 +1,7 @@
 package com.portal.kids.subscription.service;
 
+import com.portal.kids.common.Status;
 import com.portal.kids.event.model.Event;
-import com.portal.kids.event.model.EventStatus;
 import com.portal.kids.event.service.EventService;
 import com.portal.kids.payment.client.dto.PaymentStatus;
 import com.portal.kids.payment.client.dto.PaymentType;
@@ -14,8 +14,8 @@ import com.portal.kids.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,7 +46,7 @@ public class UserEventService {
                 .user(user)
                 .event(event)
                 .subscribedOn(LocalDateTime.now())
-                .status(EventStatus.ACTIVE)
+                .status(Status.ACTIVE)
                 .build();
 
         userEventRepository.save(userEvent);

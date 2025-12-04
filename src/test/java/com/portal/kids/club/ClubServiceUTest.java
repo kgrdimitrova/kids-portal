@@ -94,7 +94,7 @@ public class ClubServiceUTest {
         request.setLocation(null);
         request.setType(null);
 
-        clubService.createClubInternal(request, user);
+        clubService.createClub(request, user);
 
         ArgumentCaptor<Club> captor = ArgumentCaptor.forClass(Club.class);
         verify(clubRepository).save(captor.capture());
@@ -118,7 +118,6 @@ public class ClubServiceUTest {
         request.setDescription("New Description");
         request.setLocation(null);
         request.setType(null);
-        request.setPicture(null);
 
         when(clubRepository.findById(id)).thenReturn(Optional.of(existing));
 

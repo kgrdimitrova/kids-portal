@@ -4,6 +4,7 @@ import com.portal.kids.club.model.Club;
 import com.portal.kids.club.service.ClubService;
 import com.portal.kids.event.model.Event;
 import com.portal.kids.event.service.EventService;
+import com.portal.kids.membership.service.UserClubService;
 import com.portal.kids.payment.client.dto.PaymentResponse;
 import com.portal.kids.payment.client.dto.PaymentStatus;
 import com.portal.kids.payment.service.PaymentService;
@@ -35,19 +36,22 @@ public class EventController {
     private final UserEventService userEventService;
     private final ClubService clubService;
     private final PaymentService paymentService;
+    private final UserClubService userClubService;
 
-    public EventController(EventService eventService, UserService userService, UserEventService userEventService, ClubService clubService, PaymentService paymentService) {
+    public EventController(EventService eventService, UserService userService, UserEventService userEventService, ClubService clubService, PaymentService paymentService, UserClubService userClubService) {
         this.eventService = eventService;
         this.userService = userService;
         this.userEventService = userEventService;
         this.clubService = clubService;
         this.paymentService = paymentService;
+        this.userClubService = userClubService;
     }
 
     @GetMapping("/create-event")
-    public ModelAndView createEventPage() {
+    public ModelAndView createEventPage(@AuthenticationPrincipal UserData userData) {
 
-        List<Club> clubs = clubService.getAllClubs();
+        User user = userService.getById(userData.getUserId());
+        List<Club> clubs = userClubService.getUserClubs(user);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("createEventRequest", new EventRequest());
@@ -97,7 +101,6 @@ public class EventController {
             return modelAndView;
         }
 
-        Club club = clubService.getById(id);
         User user = userService.getById(userData.getUserId());
         eventService.createEvent(createEventRequest, user);
 
@@ -108,7 +111,7 @@ public class EventController {
     public ModelAndView eventDetails(@PathVariable UUID id, @AuthenticationPrincipal UserData userData){
 
         User user = userService.getById(userData.getUserId());
-        List<Club> clubs = clubService.getAllClubs();
+        List<Club> clubs = userClubService.getUserClubs(user);
 
         Event event = eventService.getById(id);
         EventRequest eventRequest = DtoMapper.fromEvent(event);

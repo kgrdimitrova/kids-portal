@@ -153,7 +153,7 @@
                             <input type="text"
                                    id="eventPicture"
                                    name="picture"
-                                   th:field="*{picture}"
+                                   th:field="*{imageUrl}"
                                    placeholder="Paste image URL here"
                                    class="form-control">
 
@@ -171,7 +171,7 @@
                                 <label for="ageRange">Age Range</label>
                                 <select id="ageRange" name="ageRange" th:field="*{ageCategory}">
                                     <option th:each="ageCategory : ${T(com.portal.kids.event.model.AgeCategory).values}"
-                                            th:value="${ageCategory}" th:text="${ageCategory}"></option>
+                                            th:text="${ageCategory.name()}" th:value="${ageCategory}"></option>
                                 </select>
                             </div>
                         </div>

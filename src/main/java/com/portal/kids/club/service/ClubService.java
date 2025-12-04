@@ -45,6 +45,7 @@ public class ClubService {
                 .name(createClubRequest.getName())
                 .description(createClubRequest.getDescription())
                 .location(createClubRequest.getLocation())
+                .imageUrl(createClubRequest.getImageUrl())
                 .type(createClubRequest.getType())
                 .createdOn(LocalDate.now())
                 .updatedOn(LocalDate.now())
@@ -62,8 +63,8 @@ public class ClubService {
         club.setName(clubRequest.getName());
         club.setDescription(clubRequest.getDescription());
         club.setLocation(clubRequest.getLocation());
+        club.setImageUrl(clubRequest.getImageUrl());
         club.setType(clubRequest.getType());
-        club.setPicture(clubRequest.getPicture());
         club.setUpdatedOn(LocalDate.now());
 
         clubRepository.save(club);
@@ -75,6 +76,7 @@ public class ClubService {
                 .name(createClubRequest.getName())
                 .description(createClubRequest.getDescription())
                 .location(createClubRequest.getLocation())
+                .imageUrl(createClubRequest.getImageUrl())
                 .type(createClubRequest.getType())
                 .createdOn(LocalDate.now())
                 .updatedOn(LocalDate.now())
@@ -82,7 +84,7 @@ public class ClubService {
                 .build();
 
         clubRepository.save(club);
-        log.info("A club [{}] is created by the user [{}]", club.getName(), user.getUsername());
+        log.info("A start-up club [{}] is created by the user [{}]", club.getName(), user.getUsername());
 
     }
 }

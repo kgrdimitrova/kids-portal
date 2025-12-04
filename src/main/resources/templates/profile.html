@@ -48,10 +48,10 @@
                                 <label for="profilePicture">Picture</label>
 
                                 <!-- Preview the current or fallback image -->
-                                <img th:src="${#strings.isEmpty(user.profilePicture) ?
-                  'https://tse2.mm.bing.net/th/id/OIP.1WxXX9a1BHpvMvZ8P1R0AAAAAA?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3'
+                                <img alt="User picture"
+                                     th:src="${#strings.isEmpty(user.profilePicture) ?
+                  'https://cdn.pixabay.com/photo/2023/05/02/10/35/avatar-7964945_1280.png'
                   : user.profilePicture}"
-                                     alt="Club picture"
                                      style="max-width: 200px; border-radius: 8px; display: block; margin-bottom: 8px;">
 
                                 <!-- Allow manual update of the picture URL -->

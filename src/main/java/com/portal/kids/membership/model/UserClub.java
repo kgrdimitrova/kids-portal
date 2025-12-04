@@ -34,10 +34,4 @@ public class UserClub {
     private MembershipRole role = MembershipRole.MEMBER;
 
     private boolean active = true;
-
-    public UserClub(User user, Club club) {
-        this.user = user;
-        this.club = club;
-        this.id = new UserClubId(user.getId(), club.getId());
-    }
 }

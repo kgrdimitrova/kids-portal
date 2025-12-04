@@ -2,8 +2,8 @@ package com.portal.kids.web;
 
 import com.portal.kids.club.model.Club;
 import com.portal.kids.club.service.ClubService;
+import com.portal.kids.common.Status;
 import com.portal.kids.event.model.Event;
-import com.portal.kids.event.model.EventStatus;
 import com.portal.kids.event.service.EventService;
 import com.portal.kids.membership.service.UserClubService;
 import com.portal.kids.security.UserData;
@@ -137,7 +137,7 @@ public class ClubController {
         Club club  =  clubService.getById(id);
         User user = userService.getById(userData.getUserId());
         List<Event> userEvents = userEventService.getEventsByUser(user);
-        List<Event> clubEvents = eventService.getActiveEventsByClubId(EventStatus.ACTIVE, club.getId());
+        List<Event> clubEvents = eventService.getActiveEventsByClubId(Status.ACTIVE, club.getId());
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("club", club);

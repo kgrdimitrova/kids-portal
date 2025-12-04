@@ -4,8 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -18,7 +16,6 @@ public class PaymentRequest {
 
     private UUID eventId;
 
-    //private String trainer;
     private BigDecimal amount;
 
     private PaymentStatus status;

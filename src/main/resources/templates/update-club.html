@@ -97,9 +97,9 @@
                             <label for="clubPicture">Picture</label>
 
                             <!-- Preview the current or fallback image -->
-                            <img th:src="${#strings.isEmpty(club.picture) ?
+                            <img th:src="${#strings.isEmpty(club.imageUrl) ?
                   'https://tse2.mm.bing.net/th/id/OIP.1WxXX9a1BHpvMvZ8P1R0AAAAAA?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3'
-                  : club.picture}"
+                  : club.imageUrl}"
                                  alt="Club picture"
                                  style="max-width: 200px; border-radius: 8px; display: block; margin-bottom: 8px;">
 
@@ -107,7 +107,7 @@
                             <input type="text"
                                    id="clubPicture"
                                    name="picture"
-                                   th:field="*{picture}"
+                                   th:field="*{imageUrl}"
                                    placeholder="Paste image URL here"
                                    class="form-control"
                                    th:disabled="${user.id != club.creator.id}">
@@ -150,11 +150,6 @@
 <!--    </footer>-->
 
 <script>
-    // Form validation and handling
-    //document.getElementById('createClubForm').addEventListener('submit', function(e) {
-    //    e.preventDefault();
-    //    handleFormSubmit();
-    //});
 
     // File upload preview
     document.getElementById('clubPicture').addEventListener('change', function (e) {

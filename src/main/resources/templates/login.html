@@ -58,8 +58,9 @@
                         </h3>
                     </div>
 
-                    <p class="notification error" th:text="${errorMessage}"></p>
+                    <p class="notification error" th:if="${errorMessage}" th:text="${errorMessage}"></p>
                     <p class="notification error" th:if="${loginAttemptMessage}" th:text="${loginAttemptMessage}"></p>
+                    <p class="notification error" th:if="${inactiveUserMessage}" th:text="${inactiveUserMessage}"></p>
                     <div class="form-group">
                         <label for="username" >
                             <i class="fas fa-user"></i>

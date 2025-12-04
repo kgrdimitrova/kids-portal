@@ -16,7 +16,7 @@ import java.util.UUID;
 @Repository
 public interface UserEventRepository extends JpaRepository<UserEvent, UUID> {
 
-    @Query("SELECT s.event FROM UserEvent s WHERE s.user = :user ORDER BY s.event.startTime DESC")
+    @Query("SELECT s.event FROM UserEvent s WHERE s.user = :user ORDER BY s.event.startDate DESC, s.event.startTime DESC")
     List<Event> findEventsByUserOrderByStartDateDESC(@Param("user") User user);
 
     List<UserEvent> findUserEventsByUser(@Param("user") User user);

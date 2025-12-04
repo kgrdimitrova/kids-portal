@@ -6,9 +6,10 @@ import com.portal.kids.subscription.model.UserEvent;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Builder
 @Getter
@@ -36,10 +37,6 @@ public class User {
     @Column(nullable = false)
     private Location location;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-//    private UserType type;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
@@ -54,7 +51,6 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updatedOn;
 
-    //@OrderBy("startDate ASC")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserEvent> userEvents = new ArrayList<>();
 

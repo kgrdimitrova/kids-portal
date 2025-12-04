@@ -2,6 +2,7 @@ package com.portal.kids.membership.service;
 
 import com.portal.kids.club.model.Club;
 import com.portal.kids.club.service.ClubService;
+import com.portal.kids.membership.model.MembershipRole;
 import com.portal.kids.membership.model.UserClub;
 import com.portal.kids.membership.model.UserClubId;
 import com.portal.kids.membership.repository.UserClubRepository;
@@ -42,6 +43,7 @@ public class UserClubService {
                 .user(user)
                 .club(club)
                 .joinedAt(LocalDateTime.now())
+                .role(MembershipRole.MEMBER)
                 .active(true)
                 .build();
 

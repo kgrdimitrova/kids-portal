@@ -22,8 +22,6 @@ public class TrainingGenerator {
     }
 
     @Scheduled(cron = "0 0 0 L * ?")
-    //@Scheduled(initialDelay = 10000, fixedRate = 50000)
-    //@Scheduled(cron = "*/55 * * * * *")
     public void generateMonthlyTrainings() {
 
       List<Event> trainings = eventService.getAllByStartDateBetweenAndPeriodicity(LocalDate.now().minusWeeks(1), LocalDate.now(), EventPeriodicity.TRAINING);

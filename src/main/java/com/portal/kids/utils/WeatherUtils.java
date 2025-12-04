@@ -6,7 +6,7 @@ import lombok.experimental.UtilityClass;
 import java.util.Optional;
 
 @UtilityClass
-    public class WeatherUtils {
+public class WeatherUtils {
 
     public static String extractIcon(WeatherResponse weather) {
         return Optional.ofNullable(weather)
@@ -16,4 +16,4 @@ import java.util.Optional;
                 .map(WeatherResponse.Weather::getIcon)
                 .orElse("img.png");
     }
-    }
+}

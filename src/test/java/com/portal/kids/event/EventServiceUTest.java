@@ -3,11 +3,11 @@ package com.portal.kids.event;
 import com.portal.kids.club.service.ClubService;
 import com.portal.kids.common.ActivityType;
 import com.portal.kids.common.Location;
+import com.portal.kids.common.Status;
 import com.portal.kids.event.driven.GenerateEvent;
 import com.portal.kids.event.driven.UpdateEvent;
 import com.portal.kids.event.model.Event;
 import com.portal.kids.event.model.EventPeriodicity;
-import com.portal.kids.event.model.EventStatus;
 import com.portal.kids.event.repository.EventRepository;
 import com.portal.kids.event.service.EventService;
 import com.portal.kids.exception.DatePeriodException;
@@ -73,7 +73,7 @@ class EventServiceUTest {
 
         assertThat(event.getTitle()).isEqualTo("Football");
         assertThat(event.getCreator()).isEqualTo(user);
-        assertThat(event.getStatus()).isEqualTo(EventStatus.ACTIVE);
+        assertThat(event.getStatus()).isEqualTo(Status.ACTIVE);
     }
 
     @Test
@@ -174,12 +174,12 @@ class EventServiceUTest {
     @Test
     void deactivateEventInternal_shouldSetInactive() {
         Event event = new Event();
-        event.setStatus(EventStatus.ACTIVE);
+        event.setStatus(Status.ACTIVE);
 
         eventService.deactivateEventInternal(event);
 
         verify(eventRepository).save(event);
-        assertThat(event.getStatus()).isEqualTo(EventStatus.INACTIVE);
+        assertThat(event.getStatus()).isEqualTo(Status.INACTIVE);
     }
 
     @Test

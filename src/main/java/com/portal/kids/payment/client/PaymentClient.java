@@ -1,7 +1,6 @@
 package com.portal.kids.payment.client;
 
 import com.portal.kids.payment.client.dto.PaymentRequest;
-
 import com.portal.kids.payment.client.dto.PaymentResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +18,9 @@ public interface PaymentClient {
     @PutMapping("/payments/{eventId}/{userId}/status")
     PaymentResponse updateStatus(@PathVariable UUID eventId, @PathVariable UUID userId);
 
-    @GetMapping("/payments/event/")
-    ResponseEntity<List<PaymentResponse>>getPaymentsByEventId(@RequestParam("eventId") UUID eventId);
+    @GetMapping("/payments/event/{eventId}")
+    ResponseEntity<List<PaymentResponse>> getPaymentsByEventId(@PathVariable UUID eventId);
 
-    @GetMapping("/payments/user")
-    ResponseEntity<List<PaymentResponse>>getPaymentsByUserId(@RequestParam("userId") UUID userId);
-
-//    @PostMapping("/payments")
-//    ResponseEntity<PaymentResponse> validatePayment(@RequestBody PaymentRequest requestBody);
-
-//    @PostMapping("/payments")
-//    void cancelPayment(@RequestBody PaymentRequest requestBody);
+    @GetMapping("/payments/user/{userId}")
+    ResponseEntity<List<PaymentResponse>> getPaymentsByUserId(@PathVariable UUID userId);
 }

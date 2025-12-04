@@ -18,6 +18,7 @@ public enum UserRole {
             Permission.DELETE_EVENT)),
     ADMIN(Set.of(Permission.VIEW_PAYMENTS,
             Permission.VIEW_SUBSCRIPTIONS,
+            Permission.VIEW_USERS,
             Permission.ADD_TRAINING,
             Permission.CREATE_CLUB,
             Permission.EDIT_CLUB,

@@ -1,7 +1,7 @@
 package com.portal.kids.subscription.model;
 
+import com.portal.kids.common.Status;
 import com.portal.kids.event.model.Event;
-import com.portal.kids.event.model.EventStatus;
 import com.portal.kids.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,5 +32,5 @@ public class UserEvent {
         private LocalDateTime subscribedOn;
 
         @Enumerated(EnumType.STRING)
-        private EventStatus status;
+        private Status status;
 }

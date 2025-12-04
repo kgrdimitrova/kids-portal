@@ -2,7 +2,7 @@ package com.portal.kids.web;
 
 import com.portal.kids.club.model.Club;
 import com.portal.kids.club.service.ClubService;
-import com.portal.kids.event.model.EventStatus;
+import com.portal.kids.common.Status;
 import com.portal.kids.event.service.EventService;
 import com.portal.kids.membership.service.UserClubService;
 import com.portal.kids.security.UserData;
@@ -22,8 +22,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -184,7 +186,7 @@ class ClubControllerAPITest {
         when(clubService.getById(clubId)).thenReturn(club);
         when(userService.getById(user.getId())).thenReturn(user);
         when(userEventService.getEventsByUser(user)).thenReturn(List.of());
-        when(eventService.getActiveEventsByClubId(EventStatus.ACTIVE, clubId)).thenReturn(List.of());
+        when(eventService.getActiveEventsByClubId(Status.ACTIVE, clubId)).thenReturn(List.of());
 
         mockMvc.perform(get("/clubs/{id}/schedule", clubId)
                         .with(user(userData)))

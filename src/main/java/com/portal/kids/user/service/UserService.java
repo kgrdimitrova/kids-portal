@@ -1,6 +1,7 @@
 package com.portal.kids.user.service;
 
 import com.portal.kids.common.Location;
+import com.portal.kids.exception.InvalidUserException;
 import com.portal.kids.exception.UserNotFoundException;
 import com.portal.kids.exception.UsernameAlreadyExistException;
 import com.portal.kids.security.UserData;
@@ -117,8 +118,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findByUsername(username).orElseThrow(()->new UserNotFoundException(username));
-
+        User user = userRepository.findByUsernameAndIsActive(username, true).orElseThrow(() -> new InvalidUserException(username));
         return new UserData(user.getId(), username, user.getPassword(), user.getRole(), user.isActive());
     }
 

@@ -9,11 +9,13 @@ import com.portal.kids.security.UserData;
 import com.portal.kids.subscription.service.UserEventService;
 import com.portal.kids.user.model.User;
 import com.portal.kids.user.service.UserService;
+import com.portal.kids.utils.UserUtils;
 import com.portal.kids.utils.WeatherUtils;
 import com.portal.kids.weather.client.dto.WeatherResponse;
 import com.portal.kids.weather.service.WeatherService;
 import com.portal.kids.web.dto.LoginRequest;
 import com.portal.kids.web.dto.RegisterRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -25,7 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class IndexController {
@@ -76,17 +77,18 @@ public class IndexController {
     }
 
     @GetMapping("/login")
-    public ModelAndView getLoginPage(@RequestParam(name = "loginAttemptMessage", required = false) String loginAttemptMessage, @RequestParam(name = "error", required = false) String errorMessage) {
+    public ModelAndView getLoginPage(@RequestParam(name = "loginAttemptMessage", required = false) String loginAttemptMessage,
+                                     @RequestParam(name = "error", required = false) String errorMessage,
+                                     HttpSession session) {
 
         ModelAndView modelAndView = new ModelAndView("login");
 
         modelAndView.addObject("loginRequest", new LoginRequest());
         modelAndView.addObject("loginAttemptMessage", loginAttemptMessage);
-        if (errorMessage != null) {
-            modelAndView.addObject("errorMessage", "Invalid username or password.");
-        }
+        modelAndView.addObject("errorMessage", errorMessage);
+        modelAndView.addObject("inactiveUserMessage", session.getAttribute("inactiveUserMessage"));
 
-        modelAndView.setViewName("login");
+        UserUtils.addLoginMessages(modelAndView, session, errorMessage);
 
         return modelAndView;
     }
@@ -119,7 +121,6 @@ public class IndexController {
     public ModelAndView getHomePage(@AuthenticationPrincipal UserData userData) {
 
         User user = userService.getById(userData.getUserId());
-
         WeatherResponse weather = weatherService.getWeather(String.valueOf(user.getLocation()));
 
         List<Event> events = userEventService.getEventsByUser(user);

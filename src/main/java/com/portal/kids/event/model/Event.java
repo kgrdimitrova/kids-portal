@@ -3,9 +3,9 @@ package com.portal.kids.event.model;
 import com.portal.kids.club.model.Club;
 import com.portal.kids.common.ActivityType;
 import com.portal.kids.common.Location;
+import com.portal.kids.common.Status;
 import com.portal.kids.subscription.model.UserEvent;
 import com.portal.kids.user.model.User;
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +13,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Builder
 @Getter
@@ -48,12 +50,9 @@ public class Event {
     @Column(nullable = false)
     private AgeCategory ageCategory;
 
-    private String picture;
-
     @Column(nullable = false)
     private LocalDate startDate;
 
-    //@Column(nullable = false)
     private LocalDate endDate;
 
     @Column(nullable = false)
@@ -61,6 +60,8 @@ public class Event {
 
     @Column(nullable = false)
     private LocalTime endTime;
+
+    private String imageUrl;
 
     @Lob
     @Column(columnDefinition = "TEXT")
@@ -70,12 +71,11 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EventStatus status;
+    private Status status;
 
     @ManyToOne
     private User creator;
 
-    //@Column(nullable = false)
     private BigDecimal pass;
 
     @Column(nullable = false)

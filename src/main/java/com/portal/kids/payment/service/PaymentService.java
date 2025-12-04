@@ -44,6 +44,7 @@ public class PaymentService {
                 .build();
         try {
             paymentClient.upsertPayment(payment);
+            log.info("Payment for user %s for event %s created".formatted(payment.getUsername(), payment.getEventId()));
         } catch (FeignException e) {
             log.error("[S2S Call]: Failed due to %s.".formatted(e.getMessage()));
         }

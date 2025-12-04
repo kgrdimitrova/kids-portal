@@ -1,6 +1,6 @@
 package com.portal.kids.event.driven;
 
-import com.portal.kids.event.model.EventStatus;
+import com.portal.kids.common.Status;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -17,5 +17,5 @@ public class UpdateEvent {
 
     private LocalDate createdOn;
 
-    private EventStatus status;
+    private Status status;
 }

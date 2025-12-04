@@ -36,14 +36,14 @@ public class EventRequest {
     @NotNull
     private Location location;
 
+    @URL
+    private String imageUrl;
+
     @NotNull
     private ActivityType type;
 
     @NotNull
     private EventPeriodicity periodicity;
-
-    @URL
-    private String picture;
 
     private BigDecimal pass;
 

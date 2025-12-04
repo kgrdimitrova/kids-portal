@@ -2,10 +2,10 @@ package com.portal.kids.web;
 
 import com.portal.kids.common.ActivityType;
 import com.portal.kids.common.Location;
+import com.portal.kids.common.Status;
 import com.portal.kids.event.model.AgeCategory;
 import com.portal.kids.event.model.Event;
 import com.portal.kids.event.model.EventPeriodicity;
-import com.portal.kids.event.model.EventStatus;
 import com.portal.kids.event.repository.EventRepository;
 import com.portal.kids.event.service.EventService;
 import com.portal.kids.subscription.model.UserEvent;
@@ -61,7 +61,7 @@ public class SubscribeForEventITest {
         Event event = eventRepository.save(
                 Event.builder()
                         .title("Test Event")
-                        .status(EventStatus.ACTIVE)
+                        .status(Status.ACTIVE)
                         .startDate(LocalDate.now().plusDays(10))
                         .endDate(LocalDate.now().plusDays(10))
                         .startTime(LocalTime.of(10, 0))
@@ -82,7 +82,7 @@ public class SubscribeForEventITest {
 
         assertThat(userEvent.getUser().getId()).isEqualTo(user.getId());
         assertThat(userEvent.getEvent().getId()).isEqualTo(event.getId());
-        assertThat(userEvent.getStatus()).isEqualTo(EventStatus.ACTIVE);
+        assertThat(userEvent.getStatus()).isEqualTo(Status.ACTIVE);
         assertThat(userEvent.getSubscribedOn()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.SECONDS));
     }
 

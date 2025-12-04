@@ -7,10 +7,11 @@ import com.portal.kids.membership.model.UserClub;
 import com.portal.kids.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.validator.constraints.URL;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Builder
 @Getter
@@ -33,8 +34,7 @@ public class Club {
     @Column(nullable = false)
     private Location location;
 
-    @URL
-    private String picture;
+    private String imageUrl;
 
     @ManyToOne
     private User creator;
