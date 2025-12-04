@@ -112,7 +112,7 @@ public class IndexController {
             return new ModelAndView("register");
         }
 
-        User user = userService.register(registerRequest);
+        userService.register(registerRequest);
 
         return new ModelAndView("redirect:/home");
     }

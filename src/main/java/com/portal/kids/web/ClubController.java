@@ -68,7 +68,7 @@ public class ClubController {
     }
 
     @PutMapping("/{id}/details")
-    public ModelAndView updateClub(@Valid ClubRequest clubRequest, BindingResult bindingResult, @PathVariable UUID id, @AuthenticationPrincipal UserData userData) {
+    public ModelAndView updateClub(@Valid ClubRequest clubRequest, BindingResult bindingResult, @PathVariable UUID id) {
 
         Club club = clubService.getById(id);
         List<User> members = userClubService.getClubUsers(club);
@@ -121,7 +121,7 @@ public class ClubController {
     @GetMapping("/{id}/leave")
     public ModelAndView unsubscribeEvent(@AuthenticationPrincipal UserData userData, @PathVariable UUID id) {
 
-        if (userData.equals(null)) {
+        if (userData == null) {
             throw new RuntimeException("There is no user with the id " + id);
         }
 

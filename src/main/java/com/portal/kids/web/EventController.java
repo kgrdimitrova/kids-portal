@@ -22,7 +22,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -92,7 +91,7 @@ public class EventController {
     }
 
     @PostMapping("/create-training/{id}")
-    public ModelAndView createTraining(@Valid EventRequest createEventRequest, BindingResult bindingResult, @AuthenticationPrincipal UserData userData, @PathVariable UUID id) {
+    public ModelAndView createTraining(@Valid EventRequest createEventRequest, BindingResult bindingResult, @AuthenticationPrincipal UserData userData) {
 
         ModelAndView modelAndView = new ModelAndView("create-event");
 
@@ -128,7 +127,7 @@ public class EventController {
     }
 
     @PutMapping("/{id}/details")
-    public ModelAndView updateEvent(@Valid EventRequest eventRequest, BindingResult bindingResult, @PathVariable UUID id, @AuthenticationPrincipal UserData userData) throws IOException {
+    public ModelAndView updateEvent(@Valid EventRequest eventRequest, BindingResult bindingResult, @PathVariable UUID id) {
 
         Event event = eventService.getById(id);
         ModelAndView modelAndView = new ModelAndView();
@@ -160,7 +159,7 @@ public class EventController {
     @GetMapping("/{id}/unsubscribe")
     public ModelAndView unsubscribeEvent(@AuthenticationPrincipal UserData userData, @PathVariable UUID id) {
 
-        if (userData.equals(null)) {
+        if (userData == null) {
             throw new RuntimeException("There is no user with the id " + id);
         }
 
@@ -171,7 +170,7 @@ public class EventController {
     }
 
     @GetMapping("/{id}/payments")
-    public ModelAndView getPaymentPage(@AuthenticationPrincipal UserData user, @PathVariable UUID id) {
+    public ModelAndView getPaymentPage(@PathVariable UUID id) {
 
         ModelAndView modelAndView = new ModelAndView("user-payments");
 

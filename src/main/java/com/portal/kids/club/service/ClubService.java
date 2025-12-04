@@ -68,7 +68,7 @@ public class ClubService {
         club.setUpdatedOn(LocalDate.now());
 
         clubRepository.save(club);
-        log.info("The club [{}] is updated on %s", club.getName(), LocalDateTime.now());
+        log.info("The club [%s] is updated on %s", club.getName(), LocalDateTime.now());
     }
 
     public void createClubInternal(ClubRequest createClubRequest, User user) {
