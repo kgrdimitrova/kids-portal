@@ -76,7 +76,7 @@ public class PaymentService {
             paymentClient.updateStatus(eventId, userId);
         } catch (FeignException e) {
             log.error("[S2S Call]: Failed due to %s.".formatted(e.getMessage()));
-            throw new PaymentFailException("Payment fail, Try again later.");
+            throw new PaymentFailException("Payment for event %s failed. Try again later.".formatted(eventId));
         }
     }
 }

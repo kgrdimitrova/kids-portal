@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Kids Portal</title>
+    <link href="/css/global-styles.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/login-styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -58,9 +59,9 @@
                         </h3>
                     </div>
 
-                    <p class="notification error" th:if="${errorMessage}" th:text="${errorMessage}"></p>
-                    <p class="notification error" th:if="${loginAttemptMessage}" th:text="${loginAttemptMessage}"></p>
-                    <p class="notification error" th:if="${inactiveUserMessage}" th:text="${inactiveUserMessage}"></p>
+                    <p class="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+                    <p class="error-message" th:if="${loginAttemptMessage}" th:text="${loginAttemptMessage}"></p>
+                    <p class="error-message" th:if="${inactiveUserMessage}" th:text="${inactiveUserMessage}"></p>
                     <div class="form-group">
                         <label for="username" >
                             <i class="fas fa-user"></i>

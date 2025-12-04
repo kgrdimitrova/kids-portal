@@ -85,10 +85,10 @@ public class IndexController {
 
         modelAndView.addObject("loginRequest", new LoginRequest());
         modelAndView.addObject("loginAttemptMessage", loginAttemptMessage);
-        modelAndView.addObject("errorMessage", errorMessage);
-        modelAndView.addObject("inactiveUserMessage", session.getAttribute("inactiveUserMessage"));
+        //modelAndView.addObject("errorMessage", errorMessage);
+        //modelAndView.addObject("inactiveUserMessage", session.getAttribute("inactiveUserMessage"));
 
-        UserUtils.addLoginMessages(modelAndView, session, errorMessage);
+        UserUtils.addLoginMessages(modelAndView, errorMessage, session);
 
         return modelAndView;
     }

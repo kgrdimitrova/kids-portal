@@ -1,7 +1,6 @@
 package com.portal.kids.user.service;
 
 import com.portal.kids.common.Location;
-import com.portal.kids.exception.InvalidUserException;
 import com.portal.kids.exception.UserNotFoundException;
 import com.portal.kids.exception.UsernameAlreadyExistException;
 import com.portal.kids.security.UserData;
@@ -10,6 +9,7 @@ import com.portal.kids.user.model.UserRole;
 import com.portal.kids.user.repository.UserRepository;
 import com.portal.kids.web.dto.EditProfileRequest;
 import com.portal.kids.web.dto.RegisterRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -20,6 +20,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -118,7 +120,14 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findByUsernameAndIsActive(username, true).orElseThrow(() -> new InvalidUserException(username));
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession currentSession = servletRequestAttributes.getRequest().getSession(true);
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        if (!user.isActive()) {
+            currentSession.setAttribute("inactiveUserMessage", "The account is not active!");
+        }
         return new UserData(user.getId(), username, user.getPassword(), user.getRole(), user.isActive());
     }
 
