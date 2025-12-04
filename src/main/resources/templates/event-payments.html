@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Event Payments - Kids Portal</title>
+    <link href="/css/user-payments-styles.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Open+Sans:wght@400;600;700&display=swap"
+          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- Header -->
+<header class="portal-header">
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-star"></i>
+            <h1>Kids Portal</h1>
+        </div>
+        <nav class="top-nav">
+            <a class="nav-btn" th:href="@{/home}">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+            <a class="nav-btn" th:href="@{/logout}">
+                <i class="fas fa-right-from-bracket"></i>
+                Logout
+            </a>
+        </nav>
+    </div>
+</header>
+
+<main class="portal-main">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2><i class="fas fa-credit-card"></i> Event Payments</h2>
+            <p>View all payment records for this event</p>
+        </div>
+
+        <!-- Event Info Card -->
+        <section class="card event-info-card">
+            <div class="event-header">
+                <div class="event-icon-large" style="--color:#ff6b6b">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="event-details">
+                    <h3 th:text="${event.title}">Science Fair 2024</h3>
+                    <p class="event-date" th:text="${event.startDate}"><i class="fas fa-calendar"></i> March 15, 2024
+                    </p>
+                    <p class="event-time" th:text="${event.startTime + ' - ' + event.endTime}"><i
+                            class="fas fa-clock"></i> 10:00 AM - 4:00 PM</p>
+                    <p class="event-location" th:text="${event.location}"><i class="fas fa-map-marker-alt"></i> Main
+                        Building, Auditorium</p>
+                </div>
+                <div class="payment-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">Total Payments</span>
+                        <span class="summary-value" th:text="${paymentsAmount}">$1,250.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Paid</span>
+                        <span class="summary-value paid" th:text="${paidPaymentsCount}">12</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Pending</span>
+                        <span class="summary-value pending" th:text="${pendingPaymentsCount}">3</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Cancelled</span>
+                        <span class="summary-value cancelled" th:text="${cancelledPaymentsCount}">3</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Payments List -->
+        <section class="payments-section">
+            <div class="payments-card">
+                <div class="payments-header">
+                    <h3><i class="fas fa-list"></i> Payment List</h3>
+                    <div class="payments-count" th:text="${paymentsCount}">15 payments</div>
+                </div>
+
+                <div class="payments-list" th:each="payment : ${payments}">
+                    <!-- Payment Item 1 -->
+                    <div class="payment-item">
+                        <div class="payment-username">
+                            <i class="fas fa-user"></i>
+                            <span th:text="${payment.username}">username</span>
+                        </div>
+                        <div class="payment-amount">
+                            <span class="amount-value" th:text="${payment.amount}">$50.00</span>
+                            <span class="payment-type single" th:text="${payment.type}">Single</span>
+                        </div>
+                        <form th:action="@{'/payments/' + ${event.id} + '/' + ${payment.userId} + '/status'}"
+                              th:method="put">
+
+                            <input name="status" th:value="${payment.status}" type="hidden"/>
+
+                            <div class="payment-status">
+                                <button class="status-badge paid" type="submit">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span th:text="${payment.status}">Paid</span>
+                                </button>
+                            </div>
+                            <!--                                <p class="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></p>-->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="portal-footer">
+    <div class="container">
+        <p>&copy; 2024 Kids Portal. Made with <i class="fas fa-heart"></i> for amazing kids!</p>
+    </div>
+</footer>
+
+<script>
+    // Animate cards on load
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.event-info-card').forEach((card, i) => {
+            setTimeout(() => card.classList.add('show'), 50);
+        });
+        document.querySelectorAll('.payments-card').forEach((card, i) => {
+            setTimeout(() => card.classList.add('show'), 100);
+        });
+        document.querySelectorAll('.payment-item').forEach((item, i) => {
+            setTimeout(() => item.classList.add('show'), 50 * (i + 1));
+        });
+    });
+</script>
+</body>
+</html>
+

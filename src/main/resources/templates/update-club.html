@@ -27,10 +27,10 @@
                 <i class="fas fa-right-from-bracket"></i>
                 Schedule
             </a>
-            <a th:if="${user.role.name() == 'TRAINER'}" th:href="@{'/events/create-training/' + ${club.id}}" class="nav-btn">
-                <i class="fas fa-right-from-bracket"></i>
-                Add Training
-            </a>
+            <!--            <a th:if="${user.role.name() == 'TRAINER'}" th:href="@{'/events/create-training/' + ${club.id}}" class="nav-btn">-->
+            <!--                <i class="fas fa-right-from-bracket"></i>-->
+            <!--                Add Training-->
+            <!--            </a>-->
             <a th:href="@{/logout}" class="nav-btn">
                 <i class="fas fa-right-from-bracket"></i>
                 Logout

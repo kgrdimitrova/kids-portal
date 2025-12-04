@@ -14,6 +14,8 @@ public class PaymentRequest {
 
     private String username;
 
+    private String eventName;
+
     private UUID eventId;
 
     private BigDecimal amount;

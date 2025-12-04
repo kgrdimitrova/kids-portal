@@ -44,10 +44,9 @@
                         <i class="fas fa-calendar-check"></i>
                     </div>
                     <div class="event-details">
-                        <h3 th:text="${event.title}">Science Fair 2024</h3>
-                        <p th:text="${event.startDate}" class="event-date"><i class="fas fa-calendar"></i> March 15, 2024</p>
-                        <p th:text="${event.startTime + ' - ' + event.endTime}" class="event-time"><i class="fas fa-clock"></i> 10:00 AM - 4:00 PM</p>
-                        <p th:text="${event.location}" class="event-location"><i class="fas fa-map-marker-alt"></i> Main Building, Auditorium</p>
+                        <h3 th:text="${user.username}">Science Fair 2024</h3>
+                        <p class="event-location" th:text="${user.location}"><i class="fas fa-map-marker-alt"></i> Main
+                            Building, Auditorium</p>
                     </div>
                     <div class="payment-summary">
                         <div class="summary-item">
@@ -83,25 +82,26 @@
                         <div class="payment-item">
                             <div class="payment-username">
                                 <i class="fas fa-user"></i>
-                                <span th:text="${payment.username}">username</span>
+                                <span th:text="${payment.eventName}">username</span>
                             </div>
                             <div class="payment-amount">
                                 <span class="amount-value" th:text="${payment.amount}">$50.00</span>
                                 <span class="payment-type single" th:text="${payment.type}">Single</span>
+                                <span class="payment-type single" th:text="${payment.status}">Single</span>
                             </div>
-                            <form th:action="@{'/payments/' + ${event.id} + '/' + ${payment.userId} + '/status'}"
-                                  th:method="put">
+                            <!--                            <form th:action="@{'/payments/' + ${event.id} + '/' + ${payment.userId} + '/status'}"-->
+                            <!--                                  th:method="put">-->
 
-                                <input type="hidden" name="status" th:value="${payment.status}" />
+                            <!--                                <input type="hidden" name="status" th:value="${payment.status}" />-->
 
-                                <div class="payment-status">
-                                    <button class="status-badge paid" type="submit">
-                                        <i class="fas fa-check-circle"></i>
-                                        <span th:text="${payment.status}">Paid</span>
-                                    </button>
-                                </div>
-<!--                                <p class="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></p>-->
-                            </form>
+                            <!--                                <div class="payment-status">-->
+                            <!--                                    <button class="status-badge paid" type="submit">-->
+                            <!--                                        <i class="fas fa-check-circle"></i>-->
+                            <!--                                        <span th:text="${payment.status}">Paid</span>-->
+                            <!--                                    </button>-->
+                            <!--                                </div>-->
+                            <!--&lt;!&ndash;                                <p class="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></p>&ndash;&gt;-->
+                            <!--                            </form>-->
                         </div>
                     </div>
                 </div>

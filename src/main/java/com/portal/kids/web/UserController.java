@@ -1,7 +1,11 @@
 package com.portal.kids.web;
 
+import com.portal.kids.payment.client.dto.PaymentResponse;
+import com.portal.kids.payment.client.dto.PaymentStatus;
+import com.portal.kids.payment.service.PaymentService;
 import com.portal.kids.user.model.User;
 import com.portal.kids.user.service.UserService;
+import com.portal.kids.utils.PaymentUtils;
 import com.portal.kids.web.dto.EditProfileRequest;
 import com.portal.kids.web.dto.mapper.DtoMapper;
 import jakarta.validation.Valid;
@@ -19,10 +23,12 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final PaymentService paymentService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, PaymentService paymentService) {
 
         this.userService = userService;
+        this.paymentService = paymentService;
     }
 
     @GetMapping("/{id}/profile")
@@ -35,6 +41,25 @@ public class UserController {
         modelAndView.setViewName("profile");
         modelAndView.addObject("editProfileRequest", editProfileRequest);
         modelAndView.addObject("user", user);
+
+        return modelAndView;
+    }
+
+    @GetMapping("/{id}/payments")
+    public ModelAndView getPaymentPage(@PathVariable UUID id) {
+
+        ModelAndView modelAndView = new ModelAndView("user-payments");
+
+        User user = userService.getById(id);
+        List<PaymentResponse> payments = paymentService.getUserPayments(id);
+
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("payments", payments);
+        modelAndView.addObject("pendingPaymentsCount", PaymentUtils.getPaymentsCountByStatus(payments, PaymentStatus.PENDING));
+        modelAndView.addObject("paidPaymentsCount", PaymentUtils.getPaymentsCountByStatus(payments, PaymentStatus.PAID));
+        modelAndView.addObject("cancelledPaymentsCount", PaymentUtils.getPaymentsCountByStatus(payments, PaymentStatus.CANCELLED));
+        modelAndView.addObject("paymentsCount", PaymentUtils.getPaymentsCount(payments));
+        modelAndView.addObject("paymentsAmount", PaymentUtils.getPaymentsAmountByStatus(payments, PaymentStatus.PAID));
 
         return modelAndView;
     }

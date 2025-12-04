@@ -1,9 +1,10 @@
 package com.portal.kids.web;
 
-import com.portal.kids.event.service.EventService;
 import com.portal.kids.payment.service.PaymentService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.UUID;
 
@@ -12,11 +13,9 @@ import java.util.UUID;
 public class PaymentController {
 
     private final PaymentService paymentService;
-    private final EventService eventService;
 
-    public PaymentController(PaymentService paymentService, EventService eventService) {
+    public PaymentController(PaymentService paymentService) {
         this.paymentService = paymentService;
-        this.eventService = eventService;
     }
 
     @PutMapping("/{eventId}/{userId}/status")
