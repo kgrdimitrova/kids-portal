@@ -1,7 +1,6 @@
 package com.portal.kids.web;
 
 import com.portal.kids.club.model.Club;
-import com.portal.kids.club.service.ClubService;
 import com.portal.kids.event.model.Event;
 import com.portal.kids.event.service.EventService;
 import com.portal.kids.membership.service.UserClubService;
@@ -32,15 +31,13 @@ public class EventController {
     private final EventService eventService;
     private final UserService userService;
     private final UserEventService userEventService;
-    private final ClubService clubService;
     private final PaymentService paymentService;
     private final UserClubService userClubService;
 
-    public EventController(EventService eventService, UserService userService, UserEventService userEventService, ClubService clubService, PaymentService paymentService, UserClubService userClubService) {
+    public EventController(EventService eventService, UserService userService, UserEventService userEventService, PaymentService paymentService, UserClubService userClubService) {
         this.eventService = eventService;
         this.userService = userService;
         this.userEventService = userEventService;
-        this.clubService = clubService;
         this.paymentService = paymentService;
         this.userClubService = userClubService;
     }
