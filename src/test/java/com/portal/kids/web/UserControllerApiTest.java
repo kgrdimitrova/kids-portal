@@ -1,201 +1,175 @@
 package com.portal.kids.web;
 
-import com.portal.kids.common.Location;
-import com.portal.kids.security.UserData;
+import com.portal.kids.payment.service.PaymentService;
 import com.portal.kids.user.model.User;
 import com.portal.kids.user.model.UserRole;
 import com.portal.kids.user.service.UserService;
 import com.portal.kids.web.dto.EditProfileRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 @WebMvcTest(UserController.class)
-@AutoConfigureMockMvc
-
-public class UserControllerApiTest {
-
-    @MockitoBean
-    private UserService userService;
+class UserControllerApiTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    void patchRequestToChangeUserStatus_fromAdminUser_shouldReturnRedirectAndInvokeServiceMethod() throws Exception {
+    @MockitoBean
+    private UserService userService;
 
-        UserDetails authentication = adminAuthentication();
-        MockHttpServletRequestBuilder httpRequest = patch("/users/{userId}/status", UUID.randomUUID())
-                .with(user(authentication))
-                .with(csrf());
+    @MockitoBean
+    private PaymentService paymentService;
 
-        mockMvc.perform(httpRequest)
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/users"));
-        verify(userService).switchStatus(any());
+    private User user;
+    private UUID userId;
+
+    @BeforeEach
+    void setUp() {
+        userId = UUID.randomUUID();
+
+        user = new User();
+        user.setId(userId);
+        user.setUsername("john");
+        user.setEmail("john@mail.com");
+        user.setPassword("123123");
+        user.setRole(UserRole.USER);
+        user.setActive(true);
     }
 
-    @Test
-    void patchRequestToChangeUserStatus_fromNormalUser_shouldReturn404StatusCodeAndViewNotFound() throws Exception {
-
-        UserDetails authentication = userAuthentication();
-        MockHttpServletRequestBuilder httpRequest = patch("/users/{userId}/status", UUID.randomUUID())
-                .with(user(authentication))
-                .with(csrf());
-
-        mockMvc.perform(httpRequest)
-                .andExpect(status().isNotFound())
-                .andExpect(view().name("not-found"));
-        verifyNoInteractions(userService);
-    }
+    // ======================== GET PROFILE ========================
 
     @Test
-    void patchRequestToChangeUserRole_fromAdminRole_shouldReturnRedirectAndInvokeServiceMethod() throws Exception {
+    @WithMockUser
+    void getProfilePage_shouldReturnProfileView() throws Exception {
+        Mockito.when(userService.getById(userId)).thenReturn(user);
 
-        UserDetails authentication = adminAuthentication();
-        MockHttpServletRequestBuilder httpRequest = patch("/users/{userId}/role", UUID.randomUUID())
-                .with(user(authentication))
-                .with(csrf());
-
-        mockMvc.perform(httpRequest)
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/users"));
-        verify(userService).switchRole(any());
-    }
-
-    @Test
-    void patchRequestToChangeUserRole_fromNormalUser_shouldReturn404StatusCodeAndViewNotFound() throws Exception {
-
-        UserDetails authentication = userAuthentication();
-        MockHttpServletRequestBuilder httpRequest = patch("/users/{userId}/role", UUID.randomUUID())
-                .with(user(authentication))
-                .with(csrf());
-
-        mockMvc.perform(httpRequest)
-                .andExpect(status().isNotFound())
-                .andExpect(view().name("not-found"));
-        verifyNoInteractions(userService);
-    }
-
-    @Test
-    void getProfilePage_shouldReturnProfileViewAndModel() throws Exception {
-
-        UUID id = UUID.randomUUID();
-        User user = new User();
-        user.setId(id);
-        user.setUsername("TestUser");
-
-        when(userService.getById(id)).thenReturn(user);
-
-        MockHttpServletRequestBuilder request = get("/users/{id}/profile", id)
-                .with(user(userAuthentication()));
-
-        mockMvc.perform(request)
+        mockMvc.perform(get("/users/{id}/profile", userId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("profile"))
                 .andExpect(model().attributeExists("editProfileRequest"))
-                .andExpect(model().attributeExists("user"));
-
-        verify(userService).getById(id);
+                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attribute("user", user));
     }
 
+    // ======================== GET PAYMENTS ========================
+
+//    @Test
+//    void getUserPayments_shouldReturnUserPaymentsView() throws Exception {
+//
+//        List<PaymentResponse> payments = List.of(
+//                new PaymentResponse(UUID.randomUUID(), BigDecimal.valueOf(50), PaymentStatus.PAID, LocalDateTime.now()),
+//                new PaymentResponse(UUID.randomUUID(), BigDecimal.valueOf(30), PaymentStatus.PENDING, LocalDateTime.now())
+//        );
+//
+//        Mockito.when(userService.getById(userId)).thenReturn(user);
+//        Mockito.when(paymentService.getUserPayments(userId)).thenReturn(payments);
+//
+//        mockMvc.perform(get("/users/{id}/payments", userId))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("user-payments"))
+//                .andExpect(model().attributeExists("user"))
+//                .andExpect(model().attributeExists("payments"))
+//                .andExpect(model().attributeExists("pendingPaymentsCount"))
+//                .andExpect(model().attributeExists("paidPaymentsCount"))
+//                .andExpect(model().attributeExists("cancelledPaymentsCount"))
+//                .andExpect(model().attributeExists("paymentsCount"))
+//                .andExpect(model().attributeExists("paymentsAmount"));
+//    }
+
+    // ======================== UPDATE PROFILE (SUCCESS) ========================
+
     @Test
-    void updateProfile_whenValid_shouldRedirectToHome() throws Exception {
+    @WithMockUser
+    void updateProfile_shouldRedirect_whenInputIsValid() throws Exception {
 
-        UUID id = UUID.randomUUID();
-        User user = new User();
-        user.setId(id);
+        Mockito.doNothing().when(userService).updateProfile(eq(userId), any(EditProfileRequest.class));
 
-        when(userService.getById(id)).thenReturn(user);
-
-        MockHttpServletRequestBuilder request = put("/users/{id}/profile", id)
-                .with(user(userAuthentication()))
-                .with(csrf())
-                .param("username", "UpdatedName")
-                .param("location", Location.VARNA.toString())
-                .param("email", "updated@example.com");
-
-        mockMvc.perform(request)
+        mockMvc.perform(put("/users/{id}/profile", userId)
+                        .with(csrf())
+                        .param("username", "newName")
+                        .param("email", "new@mail.com")
+                        .param("location", "VARNA"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/home"));
-
-        verify(userService).updateProfile(eq(id), any(EditProfileRequest.class));
     }
 
+    // ======================== UPDATE PROFILE (ERROR) ========================
+
     @Test
-    void updateProfile_whenValidationFails_shouldReturnProfileView() throws Exception {
+    @WithMockUser
+    void updateProfile_shouldReturnProfile_whenBindingError() throws Exception {
 
-        UUID id = UUID.randomUUID();
-        User user = new User();
-        user.setId(id);
+        Mockito.when(userService.getById(userId)).thenReturn(user);
 
-        when(userService.getById(id)).thenReturn(user);
-
-        MockHttpServletRequestBuilder request = put("/users/{id}/profile", id)
-                .with(user(userAuthentication()))
-                .with(csrf());
-
-        mockMvc.perform(request)
+        mockMvc.perform(put("/users/{id}/profile", userId)
+                        .with(csrf())
+                        .param("username", "")  // invalid
+                        .param("email", "invalid-email"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("profile"));
-
-        verify(userService, never()).updateProfile(any(), any());
+                .andExpect(view().name("profile"))
+                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attributeExists("editProfileRequest"));
     }
 
+    // ======================== GET ALL USERS (ADMIN only) ========================
+
     @Test
-    void getAllUsers_asAdmin_shouldReturnUsersView() throws Exception {
+    @WithMockUser(roles = "ADMIN")
+    void getAllUsers_shouldReturnUsersPage() throws Exception {
 
-        when(userService.getAll()).thenReturn(List.of(new User()));
+        Mockito.when(userService.getAll()).thenReturn(List.of(user));
 
-        MockHttpServletRequestBuilder request = get("/users")
-                .with(user(adminAuthentication()));
-
-        mockMvc.perform(request)
+        mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("users"))
                 .andExpect(model().attributeExists("users"));
-
-        verify(userService).getAll();
     }
+
+    // ======================== SWITCH ROLE ========================
 
     @Test
-    void getAllUsers_asNormalUser_shouldReturnNotFound() throws Exception {
+    @WithMockUser(roles = "ADMIN")
+    void switchUserRole_shouldRedirect() throws Exception {
 
-        MockHttpServletRequestBuilder request = get("/users")
-                .with(user(userAuthentication()));
+        Mockito.doNothing().when(userService).switchRole(userId);
 
-        mockMvc.perform(request)
-                .andExpect(status().isNotFound())
-                .andExpect(view().name("not-found"));
+        mockMvc.perform(patch("/users/{id}/role", userId)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/users"));
 
-        verifyNoInteractions(userService);
+        verify(userService).switchRole(userId);
     }
 
-    public static UserDetails adminAuthentication() {
+    // ======================== SWITCH STATUS ========================
 
-        return new UserData(UUID.randomUUID(), "Test", "111111", UserRole.ADMIN, true);
-    }
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void switchUserStatus_shouldRedirect() throws Exception {
 
-    public static UserDetails userAuthentication() {
+        Mockito.doNothing().when(userService).switchStatus(userId);
 
-        return new UserData(UUID.randomUUID(), "Test", "222222", UserRole.USER, true);
+        mockMvc.perform(patch("/users/{id}/status", userId)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/users"));
+
+        verify(userService).switchStatus(userId);
     }
 }

@@ -24,7 +24,7 @@
                 Home
             </a>
             <a class="nav-btn" th:href="@{'/events/' + ${event.id} + '/payments'}"
-               th:if="${user.role.name() == 'TRAINER'}">
+               th:if="${user != null and user.role != null and user.role.name() == 'TRAINER'}">
                 <i class="fas fa-right-from-bracket"></i>
                 View Payments
             </a>

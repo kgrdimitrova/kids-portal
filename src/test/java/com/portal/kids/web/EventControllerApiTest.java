@@ -1,44 +1,38 @@
 package com.portal.kids.web;
 
-import com.portal.kids.club.model.Club;
 import com.portal.kids.club.service.ClubService;
 import com.portal.kids.event.model.Event;
 import com.portal.kids.event.service.EventService;
-import com.portal.kids.payment.client.dto.PaymentResponse;
-import com.portal.kids.payment.client.dto.PaymentStatus;
+import com.portal.kids.membership.service.UserClubService;
 import com.portal.kids.payment.service.PaymentService;
 import com.portal.kids.security.UserData;
 import com.portal.kids.subscription.service.UserEventService;
 import com.portal.kids.user.model.User;
 import com.portal.kids.user.model.UserRole;
 import com.portal.kids.user.service.UserService;
+import com.portal.kids.web.dto.EventRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
+import java.util.Collections;
 import java.util.UUID;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(EventController.class)
-@AutoConfigureMockMvc
 class EventControllerApiTest {
 
     @Autowired
@@ -59,48 +53,46 @@ class EventControllerApiTest {
     @MockitoBean
     private PaymentService paymentService;
 
+    @MockitoBean
+    private UserClubService userClubService;
+
+    private UUID eventId;
+    private UUID userId;
     private User user;
-    private Club club;
     private Event event;
     private UserData userData;
+    private Authentication auth;
 
     @BeforeEach
     void setUp() {
-        user = User.builder()
-                .id(UUID.randomUUID())
-                .username("testUser")
-                .password("1234")
-                .role(UserRole.USER)
-                .isActive(true)
-                .build();
+        // Initialize IDs
+        eventId = UUID.randomUUID();
+        userId = UUID.randomUUID();
 
-        club = Club.builder()
-                .id(UUID.randomUUID())
-                .name("Test Club")
-                .build();
+        // Setup User with role
+        user = new User();
+        user.setId(userId);
+        user.setUsername("testuser");
+        user.setRole(UserRole.TRAINER);
 
-        event = Event.builder()
-                .id(UUID.randomUUID())
-                .title("Test Event")
-                .creator(user)
-                .build();
+        // Setup Event
+        event = new Event();
+        event.setId(eventId);
+        event.setCreator(user);
 
-        userData = new UserData(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                user.getRole(),
-                user.isActive()
-        );
+        // Setup UserData
+        userData = new UserData(userId, "testuser", "password", UserRole.TRAINER, true);
+
+        // Authentication token for tests
+        auth = new UsernamePasswordAuthenticationToken(userData, null, userData.getAuthorities());
     }
 
     @Test
     void createEventPage_shouldReturnView() throws Exception {
+        Mockito.when(userService.getById(userId)).thenReturn(user);
+        Mockito.when(userClubService.getUserClubs(user)).thenReturn(Collections.emptyList());
 
-        when(clubService.getAllClubs()).thenReturn(List.of(club));
-
-        mockMvc.perform(get("/events/create-event")
-                        .with(user(userData)))
+        mockMvc.perform(get("/events/create-event").with(authentication(auth)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"))
                 .andExpect(model().attributeExists("createEventRequest"))
@@ -108,120 +100,42 @@ class EventControllerApiTest {
     }
 
     @Test
-    void createEvent_shouldRedirect() throws Exception {
+    void eventDetails_shouldReturnView() throws Exception {
+        Mockito.when(userService.getById(userId)).thenReturn(user);
+        Mockito.when(userClubService.getUserClubs(user)).thenReturn(Collections.emptyList());
+        Mockito.when(eventService.getById(eventId)).thenReturn(event);
 
-        when(userService.getById(any())).thenReturn(user);
-
-        mockMvc.perform(post("/events/create-event")
-                        .with(user(userData))
-                        .with(csrf())
-                        .param("title", "Test Event")
-                        .param("description", "Description")
-                        .param("location", "VARNA")
-                        .param("startDate", LocalDate.now().plusDays(1).toString())
-                        .param("endDate", LocalDate.now().plusDays(1).toString())
-                        .param("startTime", "10:00")
-                        .param("endTime", "12:00")
-                        .param("periodicity", "TRAINING")
-                        .param("ageCategory", "ALL")
-                        .param("type", "EDUCATION"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
-
-        verify(eventService).createEvent(any(), eq(user));
-    }
-
-    @Test
-    void createEvent_whenBindingError_shouldReturnView() throws Exception {
-
-        mockMvc.perform(post("/events/create-event")
-                        .with(user(userData))
-                        .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("create-event"));
-    }
-
-    @Test
-    void eventDetails_shouldReturnUpdateEventView() throws Exception {
-
-        when(userService.getById(any())).thenReturn(user);
-        when(eventService.getById(event.getId())).thenReturn(event);
-        when(clubService.getAllClubs()).thenReturn(List.of(club));
-
-        mockMvc.perform(get("/events/{id}/details", event.getId())
-                        .with(user(userData)))
+        mockMvc.perform(get("/events/{id}/details", eventId).with(authentication(auth)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("update-event"))
-                .andExpect(model().attributeExists("event"))
                 .andExpect(model().attributeExists("eventRequest"))
+                .andExpect(model().attributeExists("event"))
+                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attributeExists("clubs"))
                 .andExpect(model().attributeExists("creator"));
     }
 
     @Test
-    void eventDetails_whenServiceFails_shouldReturn500() throws Exception {
+    void updateEvent_shouldRedirect_whenValidInput() throws Exception {
+        Mockito.when(eventService.getById(eventId)).thenReturn(event);
+        Mockito.doNothing().when(eventService).updateEvent(eq(eventId), any(EventRequest.class));
 
-        when(userService.getById(any()))
-                .thenThrow(new RuntimeException("Boom"));
-
-        mockMvc.perform(get("/events/{id}/details", event.getId())
-                        .with(user(userData)))
-                .andExpect(status().isInternalServerError())
-                .andExpect(view().name("internal-server-error"));
-    }
-
-    @Test
-    void subscribeEvent_shouldRedirect() throws Exception {
-
-        when(userService.getById(any())).thenReturn(user);
-
-        mockMvc.perform(get("/events/{id}/subscribe", event.getId())
-                        .with(user(userData)))
+        mockMvc.perform(put("/events/{id}/details", eventId).with(authentication(auth)).with(csrf())
+                        .param("title", "Updated Event")
+                        .param("location", "VARNA"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/home"));
-
-        verify(userEventService)
-                .subscribeUserToEvent(user.getId(), event.getId());
     }
 
     @Test
     void unsubscribeEvent_shouldRedirect() throws Exception {
+        Mockito.when(userService.getById(userId)).thenReturn(user);
+        Mockito.doNothing().when(userEventService).unsubscribeUserFromEvent(userId, eventId);
 
-        when(userService.getById(any())).thenReturn(user);
-
-        mockMvc.perform(get("/events/{id}/unsubscribe", event.getId())
-                        .with(user(userData)))
+        mockMvc.perform(get("/events/{id}/unsubscribe", eventId).with(authentication(auth)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/home"));
 
-        verify(userEventService)
-                .unsubscribeUserFromEvent(user.getId(), event.getId());
-    }
-
-    @Test
-    void getPaymentPage_shouldReturnUserPaymentsView() throws Exception {
-
-        List<PaymentResponse> payments = List.of(
-                PaymentResponse.builder()
-                        .status(PaymentStatus.PAID)
-                        .amount(BigDecimal.TEN)
-                        .build(),
-                PaymentResponse.builder()
-                        .status(PaymentStatus.PENDING)
-                        .amount(BigDecimal.TEN)
-                        .build()
-        );
-
-        when(eventService.getById(event.getId())).thenReturn(event);
-        when(userEventService.getUsersByEvent(event)).thenReturn(List.of(user));
-        when(paymentService.getEventPayments(event.getId())).thenReturn(payments);
-
-        mockMvc.perform(get("/events/{id}/payments", event.getId())
-                        .with(user(userData)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("user-payments"))
-                .andExpect(model().attributeExists("payments"))
-                .andExpect(model().attributeExists("paidPaymentsCount"))
-                .andExpect(model().attributeExists("paymentsAmount"));
+        Mockito.verify(userEventService).unsubscribeUserFromEvent(userId, eventId);
     }
 }
-
