@@ -61,7 +61,7 @@ public class UserEventService {
         Event event = eventService.getById(eventId);
         UserEvent userEvent = getUserEvent(userService.getById(userId), event);
         userEventRepository.deleteById(userEvent.getId());
-        paymentService.upsertPayment(userId, eventId, PaymentStatus.CANCELLED,  PaymentType.SINGLE, event.getPass());
+        paymentService.upsertPayment(userId, eventId, PaymentStatus.CANCELLED, PaymentType.SINGLE, event.getPass());
     }
 
     public List<Event> getEventsByUser(User user) {
@@ -69,14 +69,17 @@ public class UserEventService {
     }
 
     public List<UserEvent> getUserEvents(User user) {
+
         return userEventRepository.findUserEventsByUser(user);
     }
 
     public List<User> getUsersByEvent(Event event) {
+
         return userEventRepository.findUsersByEvent(event);
     }
 
     public UserEvent getUserEvent(User user, Event event) {
-        return userEventRepository.findByUserAndEvent(user, event).orElseThrow(()->new RuntimeException("User [%s] is not subscribed to this event [%s]".formatted(user.getUsername(), event.getTitle())));
+
+        return userEventRepository.findByUserAndEvent(user, event).orElseThrow(() -> new RuntimeException("User [%s] is not subscribed to this event [%s]".formatted(user.getUsername(), event.getTitle())));
     }
 }

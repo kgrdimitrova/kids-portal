@@ -15,7 +15,6 @@ import com.portal.kids.weather.client.dto.WeatherResponse;
 import com.portal.kids.weather.service.WeatherService;
 import com.portal.kids.web.dto.LoginRequest;
 import com.portal.kids.web.dto.RegisterRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -78,17 +77,12 @@ public class IndexController {
 
     @GetMapping("/login")
     public ModelAndView getLoginPage(@RequestParam(name = "loginAttemptMessage", required = false) String loginAttemptMessage,
-                                     @RequestParam(name = "error", required = false) String errorMessage,
-                                     HttpSession session) {
+                                     @RequestParam(name = "error", required = false) String errorMessage) {
 
         ModelAndView modelAndView = new ModelAndView("login");
 
         modelAndView.addObject("loginRequest", new LoginRequest());
-        modelAndView.addObject("loginAttemptMessage", loginAttemptMessage);
-        //modelAndView.addObject("errorMessage", errorMessage);
-        //modelAndView.addObject("inactiveUserMessage", session.getAttribute("inactiveUserMessage"));
-
-        UserUtils.addLoginMessages(modelAndView, errorMessage, session);
+        UserUtils.addLoginMessages(modelAndView, errorMessage, loginAttemptMessage);
 
         return modelAndView;
     }

@@ -1,24 +1,19 @@
 package com.portal.kids.utils;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.experimental.UtilityClass;
 import org.springframework.web.servlet.ModelAndView;
 
 @UtilityClass
 public class UserUtils {
 
-    public static void addLoginMessages(ModelAndView modelAndView, String errorMessage, HttpSession session) {
+    public static void addLoginMessages(ModelAndView modelAndView, String errorMessage, String loginAttemptMessage) {
 
-        String inactiveUserMessage = (String) session.getAttribute("inactiveUserMessage");
+        if (loginAttemptMessage != null) {
 
-        if (inactiveUserMessage != null) {
-            modelAndView.addObject("inactiveUserMessage", inactiveUserMessage);
-
-            // Optional: clear message after showing it once
-            session.removeAttribute("inactiveUserMessage");
-
+            modelAndView.addObject("loginAttemptMessage", loginAttemptMessage);
         }
         if (errorMessage != null) {
+
             modelAndView.addObject("errorMessage", "Username or password is incorrect.");
         }
     }

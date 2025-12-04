@@ -71,37 +71,6 @@ public class EventController {
         return new ModelAndView("redirect:/");
     }
 
-//    @GetMapping("/create-training/{id}")
-//    public ModelAndView createTrainingPage(@PathVariable UUID id) {
-//
-//        Club club = clubService.getById(id);
-//        List<Club> clubs = new ArrayList<>();
-//        clubs.add(club);
-//
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.addObject("createEventRequest", new EventRequest());
-//        modelAndView.addObject("clubs", clubs);
-//        modelAndView.addObject("club", club);
-//        modelAndView.setViewName("create-event");
-//        return modelAndView;
-//    }
-//
-//    @PostMapping("/create-training/{id}")
-//    public ModelAndView createTraining(@Valid EventRequest createEventRequest, BindingResult bindingResult, @AuthenticationPrincipal UserData userData, @PathVariable UUID id) {
-//
-//        ModelAndView modelAndView = new ModelAndView("create-event");
-//
-//        if (bindingResult.hasErrors()) {
-//            modelAndView.addObject("createEventRequest", createEventRequest);
-//            return modelAndView;
-//        }
-//
-//        User user = userService.getById(userData.getUserId());
-//        eventService.createEvent(createEventRequest, user);
-//
-//        return new ModelAndView("redirect:/");
-//    }
-
     @GetMapping("/{id}/details")
     public ModelAndView eventDetails(@PathVariable UUID id, @AuthenticationPrincipal UserData userData){
 

@@ -185,7 +185,7 @@
                                 <select id="ageRange" name="ageRange" th:field="*{ageCategory}"
                                         th:disabled="${user.id != event.creator.id}">
                                     <option th:each="ageCategory : ${T(com.portal.kids.event.model.AgeCategory).values}"
-                                            th:value="${ageCategory}" th:text="${ageCategory}"></option>
+                                            th:text="${ageCategory.displayName}" th:value="${ageCategory}"></option>
                                 </select>
                             </div>
                         </div>

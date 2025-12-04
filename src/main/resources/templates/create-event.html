@@ -111,18 +111,18 @@
                                     <option th:each="periodicity : ${T(com.portal.kids.event.model.EventPeriodicity).values}"
                                             th:value="${periodicity}" th:text="${periodicity}"></option>
                                 </select>
-<!--                                <div class="generate-future-checkbox">-->
-<!--                                    <input type="checkbox"-->
-<!--                                           id="generateFuture"-->
-<!--                                           name="generateFutureEvents"-->
-<!--                                           th:field="*{generateFutureEvents}">-->
-<!--                                    <label for="generateFuture" class="checkbox-label">-->
-<!--                                        Auto-generate future trainings-->
-<!--                                    </label>-->
-<!--                                </div>-->
+                                <!--                                <div class="generate-future-checkbox">-->
+                                <!--                                    <input type="checkbox"-->
+                                <!--                                           id="generateFuture"-->
+                                <!--                                           name="generateFutureEvents"-->
+                                <!--                                           th:field="*{generateFutureEvents}">-->
+                                <!--                                    <label for="generateFuture" class="checkbox-label">-->
+                                <!--                                        Auto-generate future trainings-->
+                                <!--                                    </label>-->
+                                <!--                                </div>-->
                             </div>
-<!--                            <small>Check this box if you want the system to create future events automatically when-->
-<!--                                periodicity is "TRAINING".</small>-->
+                            <!--                            <small>Check this box if you want the system to create future events automatically when-->
+                            <!--                                periodicity is "TRAINING".</small>-->
                         </div>
 
                     </div>
@@ -171,7 +171,7 @@
                                 <label for="ageRange">Age Range</label>
                                 <select id="ageRange" name="ageRange" th:field="*{ageCategory}">
                                     <option th:each="ageCategory : ${T(com.portal.kids.event.model.AgeCategory).values}"
-                                            th:text="${ageCategory.name()}" th:value="${ageCategory}"></option>
+                                            th:text="${ageCategory.displayName}" th:value="${ageCategory}"></option>
                                 </select>
                             </div>
                         </div>
