@@ -109,7 +109,7 @@ public class EmailServiceUTest {
     @Test
     void sendEmail_whenNoSubscribedUsers_shouldNotSendAnything() {
 
-        UUID eventId = UUID.fromString("36ef3fb8-1366-415f-a3b0-c9403efdd8f2");;
+        UUID eventId = UUID.fromString("36ef3fb8-1366-415f-a3b0-c9403efdd8f2");
 
         UpdateEvent updateEvent = mock(UpdateEvent.class);
         when(updateEvent.getEventId()).thenReturn(eventId);
