@@ -20,7 +20,7 @@ public class EventDeactivator {
     @Scheduled(initialDelay = 10000, fixedRate = 5000000)
     public void deactivatedPastEvents() {
 
-        List<Event> events = eventService.getAllEventsByStartDateBefore(LocalDate.now());
-        events.forEach(eventService::deactivateEvent);
+        List<Event> events = eventService.getAllActiveEventsByStartDateBefore(LocalDate.now());
+        events.forEach(eventService::deactivateEventInternal);
     }
 }

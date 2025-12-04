@@ -21,7 +21,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
     List<Event> findAllByStartDateBetweenAndPeriodicity(LocalDate startDate, LocalDate endDate, EventPeriodicity eventPeriodicity);
 
-    List<Event> findByStartDateBefore(LocalDate startDate);
+    List<Event> findByStatusAndStartDateBefore(Status status, LocalDate startDate);
 
     List<Event> findEventByStatusAndClubIdOrderByStartDateAsc(Status status, UUID clubId);
 }

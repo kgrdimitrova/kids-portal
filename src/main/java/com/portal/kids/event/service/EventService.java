@@ -105,8 +105,8 @@ public class EventService {
         return eventRepository.findByStartDateAfterOrderByStartDate(localDate.minusDays(1));
     }
 
-    public List<Event> getAllEventsByStartDateBefore(LocalDate startDate) {
-        return eventRepository.findByStartDateBefore(startDate);
+    public List<Event> getAllActiveEventsByStartDateBefore(LocalDate startDate) {
+        return eventRepository.findByStatusAndStartDateBefore(Status.ACTIVE, startDate);
     }
 
     public List<Event> getAllByStartDateBetweenAndPeriodicity(LocalDate startDate, LocalDate endDate, EventPeriodicity eventPeriodicity) {
@@ -143,6 +143,8 @@ public class EventService {
 
         eventRepository.save(event);
 
+        log.info("The event [{}] is updated.", event.getTitle());
+
         if (event.getPeriodicity() == EventPeriodicity.TRAINING) {
             UpdateEvent updateEvent = UpdateEvent.builder()
                     .eventId(event.getId())
@@ -160,6 +162,7 @@ public class EventService {
     public void deactivateEventInternal(Event event) {
         event.setStatus(Status.INACTIVE);
         eventRepository.save(event);
+        log.info("The event [{}] is deactivated.", event.getTitle());
     }
 
     @EventListener
@@ -180,7 +183,8 @@ public class EventService {
     }
 
     private Event generateEvent(Event initialEvent, LocalDate current) {
-        return Event.builder()
+
+        Event event = Event.builder()
                 .title(initialEvent.getTitle())
                 .startDate(current)
                 .endDate(current)
@@ -200,9 +204,14 @@ public class EventService {
                 .requirements(initialEvent.getRequirements())
                 .maxParticipants(initialEvent.getMaxParticipants())
                 .build();
+
+        log.info("A event [{}] for [{}] is generated.", event.getTitle(), event.getStartDate());
+
+        return event;
     }
 
     public void createEventInternal(EventRequest eventRequest, User user) {
+
         Club club = eventRequest.getClubId() != null ? clubService.getById(eventRequest.getClubId()) : null;
 
         LocalDateTime start = LocalDateTime.of(eventRequest.getStartDate(), eventRequest.getStartTime());
