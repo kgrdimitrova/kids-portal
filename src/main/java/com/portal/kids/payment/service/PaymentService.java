@@ -1,5 +1,7 @@
 package com.portal.kids.payment.service;
 
+import com.portal.kids.event.model.Event;
+import com.portal.kids.event.service.EventService;
 import com.portal.kids.exception.PaymentFailException;
 import com.portal.kids.payment.client.PaymentClient;
 import com.portal.kids.payment.client.dto.PaymentRequest;
@@ -25,19 +27,23 @@ public class PaymentService {
 
     private final PaymentClient paymentClient;
     private final UserService userService;
+    private final EventService eventService;
 
-    public PaymentService(PaymentClient paymentClient, UserService userService) {
+    public PaymentService(PaymentClient paymentClient, UserService userService, EventService eventService) {
         this.paymentClient = paymentClient;
         this.userService = userService;
+        this.eventService = eventService;
     }
 
     public void upsertPayment(UUID userId, UUID eventId, PaymentStatus status, PaymentType type, BigDecimal amount) {
 
         User user = userService.getById(userId);
+        Event event = eventService.getById(eventId);
         PaymentRequest payment = PaymentRequest.builder()
                 .userId(userId)
                 .username(user.getUsername())
                 .eventId(eventId)
+                .eventName(event.getTitle())
                 .amount(amount)
                 .status(status)
                 .type(type)

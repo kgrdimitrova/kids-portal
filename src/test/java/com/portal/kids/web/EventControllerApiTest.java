@@ -65,25 +65,20 @@ class EventControllerApiTest {
 
     @BeforeEach
     void setUp() {
-        // Initialize IDs
         eventId = UUID.randomUUID();
         userId = UUID.randomUUID();
 
-        // Setup User with role
         user = new User();
         user.setId(userId);
         user.setUsername("testuser");
         user.setRole(UserRole.TRAINER);
 
-        // Setup Event
         event = new Event();
         event.setId(eventId);
         event.setCreator(user);
 
-        // Setup UserData
         userData = new UserData(userId, "testuser", "password", UserRole.TRAINER, true);
 
-        // Authentication token for tests
         auth = new UsernamePasswordAuthenticationToken(userData, null, userData.getAuthorities());
     }
 

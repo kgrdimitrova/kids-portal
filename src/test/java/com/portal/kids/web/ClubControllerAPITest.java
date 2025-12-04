@@ -84,7 +84,6 @@ class ClubControllerAPITest {
                 .build();
     }
 
-    // ✅ CREATE CLUB PAGE
     @Test
     void createClubPage_shouldReturnView() throws Exception {
 
@@ -95,7 +94,6 @@ class ClubControllerAPITest {
                 .andExpect(model().attributeExists("clubRequest"));
     }
 
-    // ✅ CREATE CLUB - SUCCESS
     @Test
     void createClub_shouldRedirect() throws Exception {
 
@@ -114,7 +112,6 @@ class ClubControllerAPITest {
         verify(clubService).createClub(any(ClubRequest.class), eq(user));
     }
 
-    // ✅ CLUB DETAILS
     @Test
     void clubDetails_shouldReturnUpdatePage() throws Exception {
 
@@ -131,7 +128,6 @@ class ClubControllerAPITest {
                 .andExpect(model().attributeExists("creator"));
     }
 
-    // ✅ UPDATE CLUB - SUCCESS
     @Test
     void updateClub_shouldRedirect() throws Exception {
 
@@ -151,7 +147,6 @@ class ClubControllerAPITest {
         verify(clubService).updateClub(eq(clubId), any(ClubRequest.class));
     }
 
-    // ✅ JOIN CLUB
     @Test
     void joinClub_shouldRedirectToHome() throws Exception {
 
@@ -165,7 +160,6 @@ class ClubControllerAPITest {
         verify(userClubService).joinUserToClub(user.getId(), clubId);
     }
 
-    // ✅ LEAVE CLUB
     @Test
     void leaveClub_shouldRedirectToHome() throws Exception {
 
@@ -179,7 +173,6 @@ class ClubControllerAPITest {
         verify(userClubService).removeUserFromClub(user.getId(), clubId);
     }
 
-    // ✅ CLUB SCHEDULE
     @Test
     void clubSchedule_shouldReturnSchedulePage() throws Exception {
 

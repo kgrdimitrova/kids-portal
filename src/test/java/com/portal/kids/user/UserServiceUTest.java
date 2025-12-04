@@ -22,7 +22,6 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,19 +41,16 @@ public class UserServiceUTest {
     @Test
     void whenEditUserProfile_andRepositoryReturnsOptionalEmpty_thenThrowsException() {
 
-        // Given
         UUID userId = UUID.randomUUID();
         EditProfileRequest dto = null;
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        // When & Then
         assertThrows(UserNotFoundException.class, () -> userService.updateProfile(userId, dto));
     }
 
     @Test
     void whenEditUserProfile_andRepositoryReturnsUserFromTheDatabase_thenUpdateTheUserProfileAndSaveItToTheDatabase() {
 
-        // Given
         UUID userId = UUID.randomUUID();
         EditProfileRequest dto = EditProfileRequest.builder()
                 .location(Location.ASENOVGRAD)
@@ -69,10 +65,8 @@ public class UserServiceUTest {
                 .build();
         when(userRepository.findById(any())).thenReturn(Optional.of(userRetrievedFromDatabase));
 
-        // When
         userService.updateProfile(userId, dto);
 
-        // Then
         assertNotNull(userRetrievedFromDatabase.getProfilePicture());
         assertEquals("https://static.vecteezy.com/system/resources/previews/026/619/142/original/default-avatar-profile-icon-of-social-media-user-photo-image-vector.jpg", userRetrievedFromDatabase.getProfilePicture());
         assertEquals(Location.ASENOVGRAD, userRetrievedFromDatabase.getLocation());

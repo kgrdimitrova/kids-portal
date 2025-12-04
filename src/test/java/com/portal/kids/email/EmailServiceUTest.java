@@ -69,8 +69,6 @@ public class EmailServiceUTest {
         verify(mailSender, times(2)).send(any(SimpleMailMessage.class));
     }
 
-
-    // ✅ Scenario 2: One email fails, but the others still send
     @Test
     void sendEmail_whenOneFails_shouldContinueWithOthers() {
 

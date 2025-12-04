@@ -1,5 +1,7 @@
 package com.portal.kids.payment;
 
+import com.portal.kids.event.model.Event;
+import com.portal.kids.event.service.EventService;
 import com.portal.kids.exception.PaymentFailException;
 import com.portal.kids.payment.client.PaymentClient;
 import com.portal.kids.payment.client.dto.PaymentResponse;
@@ -31,12 +33,16 @@ class PaymentServiceUTest {
     @Mock
     private UserService userService;
 
+    @Mock
     private PaymentService paymentService;
+
+    @Mock
+    private EventService eventService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        paymentService = new PaymentService(paymentClient, userService);
+        paymentService = new PaymentService(paymentClient, userService, eventService);
     }
 
     @Test
@@ -49,7 +55,12 @@ class PaymentServiceUTest {
         user.setId(userId);
         user.setUsername("TestUser");
 
+        Event event = new Event();
+        event.setId(eventId);
+        event.setTitle("TestEvent");
+
         when(userService.getById(userId)).thenReturn(user);
+        when(eventService.getById(eventId)).thenReturn(event);
 
         paymentService.upsertPayment(userId, eventId, PaymentStatus.PAID, PaymentType.SINGLE, BigDecimal.TEN);
 
@@ -66,7 +77,12 @@ class PaymentServiceUTest {
         user.setId(userId);
         user.setUsername("TestUser");
 
+        Event event = new Event();
+        event.setId(eventId);
+        event.setTitle("TestEvent");
+
         when(userService.getById(userId)).thenReturn(user);
+        when(eventService.getById(eventId)).thenReturn(event);
 
         doThrow(FeignException.class)
                 .when(paymentClient).upsertPayment(any());

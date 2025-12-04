@@ -52,8 +52,6 @@ class UserControllerApiTest {
         user.setActive(true);
     }
 
-    // ======================== GET PROFILE ========================
-
     @Test
     @WithMockUser
     void getProfilePage_shouldReturnProfileView() throws Exception {
@@ -66,33 +64,6 @@ class UserControllerApiTest {
                 .andExpect(model().attributeExists("user"))
                 .andExpect(model().attribute("user", user));
     }
-
-    // ======================== GET PAYMENTS ========================
-
-//    @Test
-//    void getUserPayments_shouldReturnUserPaymentsView() throws Exception {
-//
-//        List<PaymentResponse> payments = List.of(
-//                new PaymentResponse(UUID.randomUUID(), BigDecimal.valueOf(50), PaymentStatus.PAID, LocalDateTime.now()),
-//                new PaymentResponse(UUID.randomUUID(), BigDecimal.valueOf(30), PaymentStatus.PENDING, LocalDateTime.now())
-//        );
-//
-//        Mockito.when(userService.getById(userId)).thenReturn(user);
-//        Mockito.when(paymentService.getUserPayments(userId)).thenReturn(payments);
-//
-//        mockMvc.perform(get("/users/{id}/payments", userId))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("user-payments"))
-//                .andExpect(model().attributeExists("user"))
-//                .andExpect(model().attributeExists("payments"))
-//                .andExpect(model().attributeExists("pendingPaymentsCount"))
-//                .andExpect(model().attributeExists("paidPaymentsCount"))
-//                .andExpect(model().attributeExists("cancelledPaymentsCount"))
-//                .andExpect(model().attributeExists("paymentsCount"))
-//                .andExpect(model().attributeExists("paymentsAmount"));
-//    }
-
-    // ======================== UPDATE PROFILE (SUCCESS) ========================
 
     @Test
     @WithMockUser
@@ -108,8 +79,6 @@ class UserControllerApiTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/home"));
     }
-
-    // ======================== UPDATE PROFILE (ERROR) ========================
 
     @Test
     @WithMockUser
@@ -127,8 +96,6 @@ class UserControllerApiTest {
                 .andExpect(model().attributeExists("editProfileRequest"));
     }
 
-    // ======================== GET ALL USERS (ADMIN only) ========================
-
     @Test
     @WithMockUser(roles = "ADMIN")
     void getAllUsers_shouldReturnUsersPage() throws Exception {
@@ -140,8 +107,6 @@ class UserControllerApiTest {
                 .andExpect(view().name("users"))
                 .andExpect(model().attributeExists("users"));
     }
-
-    // ======================== SWITCH ROLE ========================
 
     @Test
     @WithMockUser(roles = "ADMIN")
@@ -156,8 +121,6 @@ class UserControllerApiTest {
 
         verify(userService).switchRole(userId);
     }
-
-    // ======================== SWITCH STATUS ========================
 
     @Test
     @WithMockUser(roles = "ADMIN")

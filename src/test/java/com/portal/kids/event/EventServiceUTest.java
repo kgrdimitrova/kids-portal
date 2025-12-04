@@ -40,7 +40,7 @@ class EventServiceUTest {
     private ApplicationEventPublisher eventPublisher;
 
     @Mock
-    private ClubService clubService; // if EventService depends on it
+    private ClubService clubService;
 
     @InjectMocks
     private EventService eventService;
